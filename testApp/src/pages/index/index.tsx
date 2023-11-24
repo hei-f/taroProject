@@ -46,6 +46,10 @@ const Index = () => {
       {/*历史对话*/}
       <HistoryConversation />
 
+      <view className='code'>
+        console.log("Hello, World!");
+      </view>
+
       {/*选择模型*/}
       <ModelSelect
         model={model}
@@ -76,12 +80,14 @@ const Index = () => {
           style={{
             flexGrow: 1,
             // @ts-ignore
-            '--nutui-input-border-bottom-width': '1px'
           }}
           confirmType='send'
         />
 
-        <Button fill='outline' type='info'>
+        <Button
+          fill='outline'
+          type='info'
+        >
           <Image
             src={send}
             style={{width: '20px', height: '20px'}}
