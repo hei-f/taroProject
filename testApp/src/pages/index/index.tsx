@@ -1,8 +1,12 @@
+// @ts-ignore
+import send from "@/assets/img/send.png";
 import {useState} from 'react'
-import {Button, Picker, Cell, Input, Image} from '@nutui/nutui-react-taro';
+import {Button, Input, Image} from '@nutui/nutui-react-taro';
 import {View} from '@tarojs/components'
 import './index.scss'
-import send from "@/assets/img/send.png";
+import ModelSelect from "./component/modelSelect";
+import HistoryConversation from "./component/historyConversation";
+
 
 type Conversation = {
   prompt: string
@@ -39,18 +43,19 @@ const Index = () => {
 
   return (
     <View className='container'>
-      <Cell title='请选择模型' description={model} onClick={() => setModelPickerVisible(!modelPickerVisible)} />
-      <Picker
-        visible={modelPickerVisible}
-        options={models}
-        defaultValue={[model]}
-        onConfirm={(_list, values) => {
-          setModel(values[0])
-        }}
-        onClose={() => setModelPickerVisible(false)}
+      {/*历史对话*/}
+      <HistoryConversation />
+
+      {/*选择模型*/}
+      <ModelSelect
+        model={model}
+        setModel={setModel}
+        modelPickerVisible={modelPickerVisible}
+        setModelPickerVisible={setModelPickerVisible}
+        models={models}
       />
 
-
+      {/*对话内容*/}
       <View className='conversations'>
         {conversations.map((item, index) => (
           <View key={index}>
@@ -60,7 +65,7 @@ const Index = () => {
         ))}
       </View>
 
-
+      {/*输入对话*/}
       <View className='footer'>
         <Input
           clearable
@@ -70,6 +75,7 @@ const Index = () => {
           value={inputText}
           style={{
             flexGrow: 1,
+            // @ts-ignore
             '--nutui-input-border-bottom-width': '1px'
           }}
           confirmType='send'
