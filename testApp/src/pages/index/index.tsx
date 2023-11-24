@@ -1,22 +1,35 @@
-import { useState } from 'react'
-import { Button } from '@nutui/nutui-react-taro';
-import { View, Input, Picker, } from '@tarojs/components'
+import {useState} from 'react'
+import {Button, Picker, Cell, Input, Image} from '@nutui/nutui-react-taro';
+import {View} from '@tarojs/components'
 import './index.scss'
+import send from "@/assets/img/send.png";
 
+type Conversation = {
+  prompt: string
+  response: string
+}
 
 const Index = () => {
   const [inputText, setInputText] = useState('')
-  const [model, setModel] = useState('gpt-3')
-  const [conversations, setConversations] = useState([])
+  const [model, setModel] = useState<string | number>('gpt-3')
+  const [conversations, setConversations] = useState<Conversation[]>([])
 
-  const models = ['gpt-3', 'gpt-2', 'codex']
+  const [modelPickerVisible, setModelPickerVisible] = useState(false)
 
-  const onInput = (e) => {
-    setInputText(e.target.value)
-  }
+  const models = [
+    [
+      {
+        value: 'gpt-3',
+        text: 'GPT-3'
+      }, {
+      value: 'gpt-4',
+      text: 'GPT-4'
+    }
+    ]
+  ]
 
-  const onModelChange = (e) => {
-    setModel(models[e.detail.value])
+  const onInput = (value: string) => {
+    setInputText(value)
   }
 
   const onSubmit = () => {
@@ -26,9 +39,18 @@ const Index = () => {
 
   return (
     <View className='container'>
-      <Picker mode='selector' range={models} onChange={onModelChange}>
-        <View>选择模型：{model}</View>
-      </Picker>
+      <Cell title='请选择模型' description={model} onClick={() => setModelPickerVisible(!modelPickerVisible)} />
+      <Picker
+        visible={modelPickerVisible}
+        options={models}
+        defaultValue={[model]}
+        onConfirm={(_list, values) => {
+          setModel(values[0])
+        }}
+        onClose={() => setModelPickerVisible(false)}
+      />
+
+
       <View className='conversations'>
         {conversations.map((item, index) => (
           <View key={index}>
@@ -40,8 +62,25 @@ const Index = () => {
 
 
       <View className='footer'>
-        <Input onInput={onInput} onConfirm={onSubmit} value={inputText} style={{flexGrow: 1}} />
-        <Button fill='outline' type='info'>分享给好友</Button>
+        <Input
+          clearable
+          placeholder='输入对话内容'
+          onChange={onInput}
+          onConfirm={onSubmit}
+          value={inputText}
+          style={{
+            flexGrow: 1,
+            '--nutui-input-border-bottom-width': '1px'
+          }}
+          confirmType='send'
+        />
+
+        <Button fill='outline' type='info'>
+          <Image
+            src={send}
+            style={{width: '20px', height: '20px'}}
+          />
+        </Button>
       </View>
 
     </View>

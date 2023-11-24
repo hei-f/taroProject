@@ -14,11 +14,13 @@ export default {
     selectedColor: "#222",
     backgroundColor: "#fff",
     borderStyle: "black",
-    list: [//list对应了pages中的路由
+    list: [
+      //list对应了pages中的路由
+      //配置里不能用路径别名
       {
         pagePath: "pages/index/index",
-        iconPath: "./img/首页.png",
-        selectedIconPath: "./img/首页.png",
+        iconPath: "./assets/img/首页.png",
+        selectedIconPath: "./assets/img/首页.png",
         text: "首页",
       },
       {

@@ -1,7 +1,9 @@
+const path = require('path')
+
 const config = {
   projectName: "testApp",
   date: "2023-11-23",
-  designWidth (input) {
+  designWidth(input) {
     // 配置 NutUI 375 尺寸
     if (input?.file?.replace(/\\+/g, '/').indexOf('@nutui') > -1) {
       return 375
@@ -14,6 +16,9 @@ const config = {
     750: 1,
     828: 1.81 / 2,
     375: 2 / 1,
+  },
+  alias: {
+    '@': path.resolve(__dirname, '..', 'src'),
   },
   sourceRoot: "src",
   outputRoot: "dist",
