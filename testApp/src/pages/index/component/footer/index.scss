@@ -1,0 +1,24 @@
+.footer {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  width: 100%;
+  height: 90px;
+
+  .nut-input {
+    border: rgba(100, 100, 100, 0.8) 2px solid;
+    border-radius: 10px;
+    height: 100%;
+
+  }
+
+  .nut-button {
+    height: 100%;
+    --nutui-button-border-radius: 10px;
+    --nutui-button-default-bg-color: #282C34;
+    --nutui-button-default-color: #98C379;
+  }
+}

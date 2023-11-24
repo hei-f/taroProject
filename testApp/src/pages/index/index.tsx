@@ -1,11 +1,9 @@
-// @ts-ignore
-import send from "@/assets/img/send.png";
 import {useState} from 'react'
-import {Button, Input, Image} from '@nutui/nutui-react-taro';
 import {View} from '@tarojs/components'
 import './index.scss'
 import ModelSelect from "./component/modelSelect";
 import HistoryConversation from "./component/historyConversation";
+import Footer from "./component/footer";
 
 
 type Conversation = {
@@ -46,18 +44,11 @@ const Index = () => {
       {/*历史对话*/}
       <HistoryConversation />
 
-      <view className='code'>
-        console.log("Hello, World!");
-      </view>
-
-      {/*选择模型*/}
-      <ModelSelect
-        model={model}
-        setModel={setModel}
-        modelPickerVisible={modelPickerVisible}
-        setModelPickerVisible={setModelPickerVisible}
-        models={models}
-      />
+      <View className='code'>
+        <text>
+          "console.log("Hello, World!");"
+        </text>
+      </View>
 
       {/*对话内容*/}
       <View className='conversations'>
@@ -70,30 +61,16 @@ const Index = () => {
       </View>
 
       {/*输入对话*/}
-      <View className='footer'>
-        <Input
-          clearable
-          placeholder='输入对话内容'
-          onChange={onInput}
-          onConfirm={onSubmit}
-          value={inputText}
-          style={{
-            flexGrow: 1,
-            // @ts-ignore
-          }}
-          confirmType='send'
-        />
-
-        <Button
-          fill='outline'
-          type='info'
-        >
-          <Image
-            src={send}
-            style={{width: '20px', height: '20px'}}
-          />
-        </Button>
-      </View>
+      <Footer
+        inputText={inputText}
+        onInput={onInput}
+        onSubmit={onSubmit}
+        model={model}
+        setModel={setModel}
+        modelPickerVisible={modelPickerVisible}
+        setModelPickerVisible={setModelPickerVisible}
+        models={models}
+      />
 
     </View>
   )
