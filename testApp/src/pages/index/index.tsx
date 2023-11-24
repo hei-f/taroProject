@@ -1,7 +1,7 @@
 import {useState} from 'react'
+import {observer} from "mobx-react";
 import {View} from '@tarojs/components'
 import './index.scss'
-import ModelSelect from "./component/modelSelect";
 import HistoryConversation from "./component/historyConversation";
 import Footer from "./component/footer";
 
@@ -23,10 +23,11 @@ const Index = () => {
       {
         value: 'gpt-3',
         text: 'GPT-3'
-      }, {
-      value: 'gpt-4',
-      text: 'GPT-4'
-    }
+      },
+      {
+        value: 'gpt-4',
+        text: 'GPT-4'
+      }
     ]
   ]
 
@@ -44,11 +45,11 @@ const Index = () => {
       {/*历史对话*/}
       <HistoryConversation />
 
-      <View className='code'>
-        <text>
-          "console.log("Hello, World!");"
-        </text>
-      </View>
+      {/*<View>*/}
+      {/*  <GptContent>*/}
+      {/*    123123*/}
+      {/*  </GptContent>*/}
+      {/*</View>*/}
 
       {/*对话内容*/}
       <View className='conversations'>
@@ -76,4 +77,4 @@ const Index = () => {
   )
 };
 
-export default Index;
+export default observer(Index);

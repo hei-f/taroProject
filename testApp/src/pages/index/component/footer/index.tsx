@@ -1,7 +1,8 @@
+//@ts-ignore
+import send from '@/assets/images/send.png'
 import {View} from "@tarojs/components";
 import {Button, Image, Input, Picker} from "@nutui/nutui-react-taro";
 import './index.scss'
-import send from '@/assets/img/send.png'
 
 
 const Footer = (props: {

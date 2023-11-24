@@ -19,8 +19,8 @@ export default {
       //配置里不能用路径别名
       {
         pagePath: "pages/index/index",
-        iconPath: "./assets/img/首页.png",
-        selectedIconPath: "./assets/img/首页.png",
+        iconPath: "./assets/images/首页.png",
+        selectedIconPath: "./assets/images/首页.png",
         text: "首页",
       },
       {
