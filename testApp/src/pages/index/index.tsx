@@ -4,6 +4,8 @@ import {View} from '@tarojs/components'
 import './index.scss'
 import HistoryConversation from "./component/historyConversation";
 import Footer from "./component/footer";
+import GptContent from '@/component/gptContent';
+import UserContent from "@/component/userContent";
 
 
 type Conversation = {
@@ -45,11 +47,18 @@ const Index = () => {
       {/*历史对话*/}
       <HistoryConversation />
 
-      {/*<View>*/}
-      {/*  <GptContent>*/}
-      {/*    123123*/}
-      {/*  </GptContent>*/}
-      {/*</View>*/}
+      <View>
+        <GptContent>
+          123123
+        </GptContent>
+      </View>
+
+      <View>
+        <UserContent>
+          123123
+        </UserContent>
+      </View>
+
 
       {/*对话内容*/}
       <View className='conversations'>

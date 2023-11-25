@@ -10,8 +10,8 @@ export default {
     navigationBarTextStyle: "black",
   },
   tabBar: { //底部导航栏
-    color: "#333",
-    selectedColor: "#222",
+    color: "#BBB",
+    selectedColor: "#111",
     backgroundColor: "#fff",
     borderStyle: "black",
     list: [
@@ -21,11 +21,14 @@ export default {
         pagePath: "pages/index/index",
         iconPath: "./assets/images/首页.png",
         selectedIconPath: "./assets/images/首页.png",
-        text: "首页",
+        text: "Chat",
+
       },
       {
         pagePath: "pages/user/index",
-        text: "用户中心",
+        iconPath: "./assets/images/用户.png",
+        selectedIconPath: "./assets/images/用户.png",
+        text: "User",
       },
     ],
   },

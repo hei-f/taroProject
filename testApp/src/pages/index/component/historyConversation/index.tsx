@@ -48,6 +48,7 @@ const HistoryConversation = () => {
           conversationList.map((item, index) => (
               <TabPane
                 key={`${index}-${item.title}`}
+                // @ts-ignore
                 title={
                   <View>
                     {item.title}
@@ -80,6 +81,7 @@ const HistoryConversation = () => {
           addTab && (
             <TabPane
               key={`${conversationList.length}-${addTab.title}`}
+              // @ts-ignore
               title={addTab.title}
             >
             </TabPane>

@@ -5,10 +5,10 @@ class Store {
     makeAutoObservable(this);
   }
 
-  coute = 0;
+  openApiKey = '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'
 
-  addCount = () => {
-    this.coute++;
+  setOpenApiKey = (key: string) => {
+    this.openApiKey = key;
   }
 
 
