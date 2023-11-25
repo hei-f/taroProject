@@ -10,9 +10,14 @@ const User = () => {
   const {
     openApiKey,
     setOpenApiKey,
+    system,
+    setSystem,
   } = store
   const [keyDialogVisible, setKeyDialogVisible] = useState(false)
   const [inputKey, setInputKey] = useState('')
+
+  const [systemDialogVisible, setSystemDialogVisible] = useState(false)
+  const [inputSystem, setInputSystem] = useState('')
 
   const onApiKeyCellClick = () => {
     setInputKey('')
@@ -32,6 +37,24 @@ const User = () => {
     setKeyDialogVisible(false)
   }
 
+  const onSystemCellClick = () => {
+    setInputSystem('')
+    setSystemDialogVisible(true)
+  }
+
+  const onSystemInputChange = (value: string) => {
+    setInputSystem(value)
+  }
+
+  const onSystemDialogConfirm = () => {
+    setSystem(inputSystem)
+    setSystemDialogVisible(false)
+  }
+
+  const onSystemDialogCancel = () => {
+    setSystemDialogVisible(false)
+  }
+
   return (
     <View
       className='user'
@@ -42,6 +65,9 @@ const User = () => {
         extra={openApiKey}
         align='center'
         onClick={onApiKeyCellClick}
+        style={{
+          boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.25)',
+        }}
       />
       <Dialog
         className='keyDialog'
@@ -57,6 +83,33 @@ const User = () => {
         }
         onConfirm={onApiKeyDialogConfirm}
         onCancel={onApiKeyDialogCancel}
+      >
+      </Dialog>
+
+      <Cell
+        className='system'
+        title='设置System'
+        extra={system}
+        align='center'
+        onClick={onSystemCellClick}
+        style={{
+          boxShadow: '2px 2px 2px rgba(0, 0, 0, 0.25)',
+        }}
+      />
+      <Dialog
+        className='systemDialog'
+        visible={systemDialogVisible}
+        title='设置System'
+        content={
+          <Input
+            className='keyInput'
+            value={inputSystem}
+            onChange={onSystemInputChange}
+            placeholder='请输入System'
+          />
+        }
+        onConfirm={onSystemDialogConfirm}
+        onCancel={onSystemDialogCancel}
       >
       </Dialog>
     </View>

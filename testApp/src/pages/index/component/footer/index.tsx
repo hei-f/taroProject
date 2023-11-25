@@ -6,6 +6,7 @@ import {useState} from "react";
 // @ts-ignore
 import {models} from "@/utils/constant";
 import './index.scss'
+import Taro from "@tarojs/taro";
 
 
 const Footer = (
@@ -24,8 +25,14 @@ const Footer = (
   }
 
   const onSubmit = () => {
-    // 调用云函数发送请求到OpenAI API
-    // 更新对话列表
+    Taro.request({
+      url: 'http://localhost:5000/chat',
+      method: 'POST',
+      data: {
+        model,
+        text: inputText,
+      },
+    })
   }
 
   return (

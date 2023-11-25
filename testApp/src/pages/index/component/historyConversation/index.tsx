@@ -1,8 +1,9 @@
-import {useState} from "react";
+import {CSSProperties, useState} from "react";
 import {Tabs, TabPane} from '@nutui/nutui-react-taro';
 import {Plus, CircleClose} from '@nutui/icons-react-taro'
 import {View} from "@tarojs/components";
 import ChatRoom from "../chatRoom";
+import './index.scss'
 
 const HistoryConversation = () => {
   const [activeTab, setActiveTab] = useState<any>('0')
@@ -18,17 +19,6 @@ const HistoryConversation = () => {
       title: '历史对话3',
     },
   ])
-
-  const addTab = {
-    title: <Plus
-      name='plus'
-      color='#979797'
-      style={{
-        marginTop: '11px',
-      }}
-    />,
-    content: '新增对话'
-  }
 
   const onTabsClick = (item: string | number) => {
     if (Number(item) !== historyConversationList.length) {
@@ -63,26 +53,44 @@ const HistoryConversation = () => {
     )
   }
 
+  const getStyle1 = (index: number): CSSProperties => {
+    return ({
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      border: `${index == activeTab ? '#89E5D2' : '#282C34'} solid 1px`,
+      height: "40px",
+      borderRadius: '10px',
+      backgroundColor: index == activeTab ? '#282C34' : '#89E5D2',
+      fontWeight: "550",
+      color: index == activeTab ? '#89E5D2' : '#282C34',
+    })
+  }
+
   return (
     <View>
       <Tabs
+        className='historyConversationTabs'
         value={activeTab}
         align='left'
         onClick={onTabsClick}
         autoHeight
-        tabStyle={{backgroundColor: '#fff'}}
       >
         {
           historyConversationList.map((item, index) => (
               <TabPane
                 key={`${item.title}`}
+                className='historyConversationTabPane'
                 // @ts-ignore
                 title={
-                  <View>
+                  <View
+                    style={getStyle1(index)}
+                  >
                     {item.title}
                     <CircleClose
                       name='circle-close'
-                      color='#979797'
+                      color={index == activeTab ? '#89E5D2' : '#282C34'}
                       size='12px'
                       onClick={onTabClose(index)}
                     />
@@ -103,14 +111,21 @@ const HistoryConversation = () => {
         }
 
         {
-          addTab && (
-            <TabPane
-              key={`${setHistoryConversationList.length}-${addTab.title}`}
-              // @ts-ignore
-              title={addTab.title}
-            >
-            </TabPane>
-          )
+          <TabPane
+            key={`${setHistoryConversationList.length}-新增}`}
+            // @ts-ignore
+            title={
+              <View
+                className='addHistoryConversation'
+              >
+                <Plus
+                  name='plus'
+                  color='#282C34'
+                />
+              </View>
+            }
+          >
+          </TabPane>
         }
       </Tabs>
     </View>
