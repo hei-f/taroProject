@@ -5,6 +5,7 @@ import {Cell, Dialog, Input} from "@nutui/nutui-react-taro";
 import {observer} from "mobx-react";
 import {useState} from "react";
 import './index.scss'
+import ParamsDialog from "./component/paramsDialog";
 
 const User = () => {
   const {
@@ -13,58 +14,95 @@ const User = () => {
     system,
     setSystem,
   } = store
+
   const [keyDialogVisible, setKeyDialogVisible] = useState(false)
   const [inputKey, setInputKey] = useState('')
 
   const [systemDialogVisible, setSystemDialogVisible] = useState(false)
   const [inputSystem, setInputSystem] = useState('')
 
-  const onApiKeyCellClick = () => {
-    setInputKey('')
-    setKeyDialogVisible(true)
+  const [paramsDialogVisible, setParamsDialogVisible] = useState(false)
+
+  const handleCellClick = (type: string) => {
+    switch (type) {
+      case 'apiKey':
+        return (() => {
+          setInputKey('')
+          setKeyDialogVisible(true)
+        })
+      case 'system':
+        return (() => {
+          setInputSystem('')
+          setSystemDialogVisible(true)
+        })
+      case 'params':
+        return (() => {
+          setParamsDialogVisible(true)
+        })
+      default:
+        break
+    }
   }
 
-  const onApiKeyInputChange = (value: string) => {
-    setInputKey(value)
+  const handleInputChange = (type: string) => {
+    switch (type) {
+      case 'apiKey':
+        return ((value: string) => {
+          setInputKey(value)
+        })
+      case 'system':
+        return ((value: string) => {
+          setInputSystem(value)
+        })
+      default:
+        break
+    }
   }
 
-  const onApiKeyDialogConfirm = () => {
-    setOpenApiKey(inputKey)
-    setKeyDialogVisible(false)
+  const handleDialogConfirm = (type: string) => {
+    switch (type) {
+      case 'apiKey':
+        return (() => {
+          setOpenApiKey(inputKey)
+          setKeyDialogVisible(false)
+        })
+      case 'system':
+        return (() => {
+          setSystem(inputSystem)
+          setSystemDialogVisible(false)
+        })
+      default:
+        break
+    }
   }
 
-  const onApiKeyDialogCancel = () => {
-    setKeyDialogVisible(false)
+  const handleDialogCancel = (type: string) => {
+    switch (type) {
+      case 'apiKey':
+        return (() => {
+          setKeyDialogVisible(false)
+        })
+      case 'system':
+        return (() => {
+          setSystemDialogVisible(false)
+        })
+      default:
+        break
+    }
   }
 
-  const onSystemCellClick = () => {
-    setInputSystem('')
-    setSystemDialogVisible(true)
-  }
-
-  const onSystemInputChange = (value: string) => {
-    setInputSystem(value)
-  }
-
-  const onSystemDialogConfirm = () => {
-    setSystem(inputSystem)
-    setSystemDialogVisible(false)
-  }
-
-  const onSystemDialogCancel = () => {
-    setSystemDialogVisible(false)
-  }
 
   return (
     <View
       className='user'
     >
+
       <Cell
         className='apiKey'
         title='设置ApiKey'
         extra={openApiKey}
         align='center'
-        onClick={onApiKeyCellClick}
+        onClick={handleCellClick('apiKey')}
         style={{
           boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.25)',
         }}
@@ -77,21 +115,20 @@ const User = () => {
           <Input
             className='keyInput'
             value={inputKey}
-            onChange={onApiKeyInputChange}
+            onChange={handleInputChange('apiKey')}
             placeholder='请输入ApiKey'
           />
         }
-        onConfirm={onApiKeyDialogConfirm}
-        onCancel={onApiKeyDialogCancel}
-      >
-      </Dialog>
+        onConfirm={handleDialogConfirm('apiKey')}
+        onCancel={handleDialogCancel('apiKey')}
+      />
 
       <Cell
         className='system'
         title='设置System'
         extra={system}
         align='center'
-        onClick={onSystemCellClick}
+        onClick={handleCellClick('system')}
         style={{
           boxShadow: '2px 2px 2px rgba(0, 0, 0, 0.25)',
         }}
@@ -102,16 +139,30 @@ const User = () => {
         title='设置System'
         content={
           <Input
-            className='keyInput'
+            className='systemInput'
             value={inputSystem}
-            onChange={onSystemInputChange}
+            onChange={handleInputChange('system')}
             placeholder='请输入System'
           />
         }
-        onConfirm={onSystemDialogConfirm}
-        onCancel={onSystemDialogCancel}
-      >
-      </Dialog>
+        onConfirm={handleDialogConfirm('system')}
+        onCancel={handleDialogCancel('system')}
+      />
+
+      <Cell
+        className='params'
+        title='高级设置'
+        align='center'
+        onClick={handleCellClick('params')}
+        style={{
+          boxShadow: '2px 2px 2px rgba(0, 0, 0, 0.25)',
+        }}
+      />
+      <ParamsDialog
+        paramsDialogVisible={paramsDialogVisible}
+      />
+
+
     </View>
   )
 }
