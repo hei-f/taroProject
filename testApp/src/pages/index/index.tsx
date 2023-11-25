@@ -1,11 +1,13 @@
 import {useState} from 'react'
 import {observer} from "mobx-react";
 import {View} from '@tarojs/components'
-import './index.scss'
+// @ts-ignore
+import GptContent from '@/component/gptContent';
+// @ts-ignore
+import UserContent from "@/component/userContent";
 import HistoryConversation from "./component/historyConversation";
 import Footer from "./component/footer";
-import GptContent from '@/component/gptContent';
-import UserContent from "@/component/userContent";
+import './index.scss'
 
 
 type Conversation = {
@@ -14,33 +16,8 @@ type Conversation = {
 }
 
 const Index = () => {
-  const [inputText, setInputText] = useState('')
-  const [model, setModel] = useState<string | number>('gpt-3')
+
   const [conversations, setConversations] = useState<Conversation[]>([])
-
-  const [modelPickerVisible, setModelPickerVisible] = useState(false)
-
-  const models = [
-    [
-      {
-        value: 'gpt-3',
-        text: 'GPT-3'
-      },
-      {
-        value: 'gpt-4',
-        text: 'GPT-4'
-      }
-    ]
-  ]
-
-  const onInput = (value: string) => {
-    setInputText(value)
-  }
-
-  const onSubmit = () => {
-    // 调用云函数发送请求到OpenAI API
-    // 更新对话列表
-  }
 
   return (
     <View className='container'>
@@ -71,16 +48,7 @@ const Index = () => {
       </View>
 
       {/*输入对话*/}
-      <Footer
-        inputText={inputText}
-        onInput={onInput}
-        onSubmit={onSubmit}
-        model={model}
-        setModel={setModel}
-        modelPickerVisible={modelPickerVisible}
-        setModelPickerVisible={setModelPickerVisible}
-        models={models}
-      />
+      <Footer />
 
     </View>
   )

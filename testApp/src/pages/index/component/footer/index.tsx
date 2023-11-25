@@ -2,37 +2,37 @@
 import send from '@/assets/images/send.png'
 import {View} from "@tarojs/components";
 import {Button, Image, Input, Picker} from "@nutui/nutui-react-taro";
+import {useState} from "react";
+// @ts-ignore
+import {models} from "@/utils/constant";
 import './index.scss'
 
 
-const Footer = (props: {
-  inputText: string
-  onInput: (value: string) => void
-  onSubmit: () => void
-  model: string | number
-  setModel: (model: string | number) => void
-  modelPickerVisible: boolean
-  setModelPickerVisible: (visible: boolean) => void
-  models: { value: string | number, text: string }[][]
-}) => {
-  const {
-    inputText,
-    onInput,
-    onSubmit,
-    model,
-    setModel,
-    modelPickerVisible,
-    setModelPickerVisible,
-    models
-  } = props
+const Footer = (
+  // props: {}
+) => {
+  // const {
+  //
+  // } = props
+
+  const [inputText, setInputText] = useState('')
+  const [model, setModel] = useState<string | number>('gpt-3')
+  const [modelPickerVisible, setModelPickerVisible] = useState(false)
+
+  const onInput = (value: string) => {
+    setInputText(value)
+  }
+
+  const onSubmit = () => {
+    // 调用云函数发送请求到OpenAI API
+    // 更新对话列表
+  }
 
   return (
 
     <View className='footer'>
       <Button
-        // fill='outline'
         size='small'
-        // color='#98C379'
         onClick={() => {
           setModelPickerVisible(!modelPickerVisible)
         }}
