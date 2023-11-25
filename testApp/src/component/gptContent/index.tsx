@@ -8,7 +8,12 @@ const GptContent = (props: {
 }) => {
   const {children} = props
   return (
-    <Cell>
+    <Cell
+      style={{
+        backgroundColor: '#F2F6F7',
+        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+      }}
+    >
       <View
         style={{
           display: 'flex',

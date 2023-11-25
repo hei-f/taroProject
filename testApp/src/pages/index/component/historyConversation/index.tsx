@@ -2,14 +2,21 @@ import {useState} from "react";
 import {Tabs, TabPane} from '@nutui/nutui-react-taro';
 import {Plus, CircleClose} from '@nutui/icons-react-taro'
 import {View} from "@tarojs/components";
+import ChatRoom from "../chatRoom";
 
 const HistoryConversation = () => {
   const [activeTab, setActiveTab] = useState<any>('0')
 
-  const [conversationList, setConversationList] = useState<any[]>([
-    {title: '历史对话1', content: '历史对话1'},
-    {title: '历史对话2', content: '历史对话2'},
-    {title: '历史对话3', content: '历史对话3'},
+  const [historyConversationList, setHistoryConversationList] = useState<any[]>([
+    {
+      title: '历史对话1',
+    },
+    {
+      title: '历史对话2',
+    },
+    {
+      title: '历史对话3',
+    },
   ])
 
   const addTab = {
@@ -23,31 +30,52 @@ const HistoryConversation = () => {
     content: '新增对话'
   }
 
+  const onTabsClick = (item: string | number) => {
+    if (Number(item) !== historyConversationList.length) {
+      setActiveTab(item)
+    } else {
+      setHistoryConversationList(
+        [...historyConversationList,
+          {
+            title: `历史对话${historyConversationList.length + 1}`,
+          }
+        ]
+      )
+    }
+  }
+
+  const onTabClose = (index: number) => {
+    return (
+      () => {
+        if (historyConversationList.length === 1) {
+          setHistoryConversationList([
+            {
+              title: '历史对话1',
+            },
+          ])
+          setActiveTab('0')
+        } else {
+          setHistoryConversationList(
+            historyConversationList.filter((_, i) => i !== index)
+          )
+        }
+      }
+    )
+  }
+
   return (
     <View>
       <Tabs
         value={activeTab}
         align='left'
-        onClick={(item) => {
-          if (Number(item) !== conversationList.length) {
-            setActiveTab(item)
-          } else {
-            setConversationList(
-              [...conversationList,
-                {title: `历史对话${conversationList.length + 1}`, content: `历史对话${conversationList.length + 1}`}
-              ]
-            )
-          }
-        }}
+        onClick={onTabsClick}
         autoHeight
-        tabStyle={{
-          backgroundColor: '#fff',
-        }}
+        tabStyle={{backgroundColor: '#fff'}}
       >
         {
-          conversationList.map((item, index) => (
+          historyConversationList.map((item, index) => (
               <TabPane
-                key={`${index}-${item.title}`}
+                key={`${item.title}`}
                 // @ts-ignore
                 title={
                   <View>
@@ -56,22 +84,19 @@ const HistoryConversation = () => {
                       name='circle-close'
                       color='#979797'
                       size='12px'
-                      onClick={() => {
-                        if (conversationList.length === 1) {
-                          setConversationList([
-                            {title: '历史对话1', content: '历史对话1'},
-                          ])
-                          setActiveTab('0')
-                        } else {
-                          setConversationList(
-                            conversationList.filter((_, i) => i !== index)
-                          )
-                        }
-                      }}
+                      onClick={onTabClose(index)}
                     />
                   </View>
                 }
               >
+                <ChatRoom conversationList={[{
+                  prompt: '123',
+                  response: '123',
+                }, {
+                  prompt: '123',
+                  response: '123',
+                }]}
+                />
               </TabPane>
             )
           )
@@ -80,7 +105,7 @@ const HistoryConversation = () => {
         {
           addTab && (
             <TabPane
-              key={`${conversationList.length}-${addTab.title}`}
+              key={`${setHistoryConversationList.length}-${addTab.title}`}
               // @ts-ignore
               title={addTab.title}
             >

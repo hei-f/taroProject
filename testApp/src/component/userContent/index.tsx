@@ -8,7 +8,12 @@ const UserContent = (props: {
   const {children} = props
 
   return (
-    <Cell>
+    <Cell
+      style={{
+        backgroundColor: '#282C34',
+        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+      }}
+    >
       <View
         style={{
           display: 'flex',
@@ -16,11 +21,10 @@ const UserContent = (props: {
           justifyContent: 'start',
           flexDirection: 'row-reverse',
           width: '100%',
+          color: '#E5C17C',
         }}
       >
-        <View>
-          {children}
-        </View>
+        {children}
       </View>
     </Cell>)
 }
