@@ -11,12 +11,15 @@ const HistoryConversation = () => {
   const [historyConversationList, setHistoryConversationList] = useState<any[]>([
     {
       title: '历史对话1',
+      id: '1',
     },
     {
       title: '历史对话2',
+      id: '2',
     },
     {
       title: '历史对话3',
+      id: '3',
     },
   ])
 
@@ -28,6 +31,7 @@ const HistoryConversation = () => {
         [...historyConversationList,
           {
             title: `历史对话${historyConversationList.length + 1}`,
+            id: `${historyConversationList.length + 1}`,
           }
         ]
       )
@@ -41,6 +45,7 @@ const HistoryConversation = () => {
           setHistoryConversationList([
             {
               title: '历史对话1',
+              id: '1',
             },
           ])
           setActiveTab('0')
@@ -97,13 +102,8 @@ const HistoryConversation = () => {
                   </View>
                 }
               >
-                <ChatRoom conversationList={[{
-                  prompt: '123',
-                  response: '123',
-                }, {
-                  prompt: '123',
-                  response: '123',
-                }]}
+                <ChatRoom
+                  id={item.id}
                 />
               </TabPane>
             )

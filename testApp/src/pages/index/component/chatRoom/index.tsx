@@ -3,22 +3,30 @@ import {View} from "@tarojs/components";
 import UserContent from "@/component/userContent";
 // @ts-ignore
 import GptContent from "@/component/gptContent";
+// @ts-ignore
+import {store} from "@/store";
 
 
 const ChatRoom = (props: {
-  conversationList: any[]
+  id: string,
 }) => {
 
   const {
-    conversationList
+    id
   } = props
+
+  const {
+    conversationMap
+  } = store
+
+  const conversationList = conversationMap[id] || []
 
   return (
     <View
       style={{marginTop: '-25px',}}
     >
       {
-        conversationList.map((item, index) => (
+        conversationList && conversationList.map((item, index) => (
           <View
             key={index}
           >
