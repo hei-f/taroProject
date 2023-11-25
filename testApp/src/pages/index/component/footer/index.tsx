@@ -1,12 +1,12 @@
 //@ts-ignore
 import send from '@/assets/images/send.png'
+import Taro from "@tarojs/taro";
 import {View} from "@tarojs/components";
-import {Button, Image, Input, Picker} from "@nutui/nutui-react-taro";
+import {Button, Image, TextArea, Picker} from "@nutui/nutui-react-taro";
 import {useState} from "react";
 // @ts-ignore
 import {models} from "@/utils/constant";
 import './index.scss'
-import Taro from "@tarojs/taro";
 
 
 const Footer = (
@@ -64,15 +64,13 @@ const Footer = (
         onClose={() => setModelPickerVisible(false)}
       />
 
-      <Input
-        clearable
+      <TextArea
         placeholder='输入对话内容'
         onChange={onInput}
         onConfirm={onSubmit}
         value={inputText}
-        style={{
-          flexGrow: 1,
-        }}
+        maxLength={2000}
+        showCount
         confirmType='send'
       />
 

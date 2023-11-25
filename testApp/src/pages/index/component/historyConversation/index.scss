@@ -1,8 +1,8 @@
 .historyConversationTabs {
-  border-radius: 10px;
   --nutui-tabs-titles-background-color: #89E5D2;
   --nutui-tabs-horizontal-tab-line-color: #89E5D2;
   --nutui-tabs-horizontal-tab-line-opacity: 0.75;
+  --nutui-tabs-titles-border-radius: 10px;
 
   .addHistoryConversation {
     display: flex;

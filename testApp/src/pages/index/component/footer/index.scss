@@ -8,10 +8,15 @@
   width: 100%;
   height: 90px;
 
-  .nut-input {
+  .nut-textarea {
     border: rgba(100, 100, 100, 0.8) 2px solid;
     border-radius: 10px;
     height: 100%;
+    flex-grow: 1;
+
+    .nut-textarea__textarea {
+      height: 100%;
+    }
 
   }
 
