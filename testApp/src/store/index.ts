@@ -18,13 +18,8 @@ class Store {
   }
 
   //对话相关
-  conversationMap = {
-    "1": [
-      {
-        prompt: "Hi, I'm a helpful assistant. Let's think step by step.",
-        response: "Hi, I'm a helpful assistant. Let's think step by step.",
-      }
-    ]
+  conversationMap: any = {
+    "newConversation": []
   }
   addConversation = (id: string, content: any) => {
     if (!this.conversationMap[id]) {
@@ -33,7 +28,14 @@ class Store {
       this.conversationMap[id].push(content)
     }
   }
-  deleteConversation = (id: string) => {
+  deleteConversation = (id?: string) => {
+    if (!id) {
+      this.conversationMap = {
+        "newConversation": []
+      }
+      return;
+    }
+
     if (!this.conversationMap[id]) return;
     delete this.conversationMap[id];
   }
@@ -44,11 +46,32 @@ class Store {
       return this.conversationMap[id]
     }
   }
+  showResponse = (id: string, content: string) => {
+    this.conversationMap[id][this.conversationMap[id].length - 1].response = content;
+  }
+  setConversation = (id: string, content: any) => {
+    this.conversationMap[id] = content;
+  }
 
   //当前对话id
-  id = ''
+  id = 'newConversation'
   setId = (id: string) => {
     this.id = id;
+  }
+
+  //历史对话相关
+  conversationTabs = [
+    {
+      title: '历史对话1',
+      id: 'newConversation',
+    },
+  ]
+  setConversationTabs = (tabs: any) => {
+    this.conversationTabs = tabs;
+  }
+  activeTab = 0
+  setActiveTab = (index: number) => {
+    this.activeTab = index;
   }
 
 

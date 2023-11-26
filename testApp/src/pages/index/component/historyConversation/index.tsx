@@ -1,4 +1,4 @@
-import {CSSProperties, useState} from "react";
+import {CSSProperties} from "react";
 // @ts-ignore
 import {store} from "@/store";
 import {observer} from "mobx-react";
@@ -10,13 +10,14 @@ import './index.scss'
 
 const HistoryConversation = () => {
 
-  const [activeTab, setActiveTab] = useState(0)
-  const [conversationTabs, setConversationTabs] = useState<any[]>([
-    {
-      title: '历史对话1',
-      id: '1',
-    },
-  ])
+  const {
+    conversationTabs,
+    setConversationTabs,
+    activeTab,
+    setActiveTab,
+    deleteConversation,
+
+  } = store
 
   const onTabsClick = (item: number) => {
     if (item !== conversationTabs.length) {
@@ -44,8 +45,9 @@ const HistoryConversation = () => {
             },
           ])
           setActiveTab(0)
-
+          deleteConversation()
         } else {
+          deleteConversation(conversationTabs[index].id)
           setConversationTabs(
             conversationTabs.filter((_, i) => i !== index)
           )

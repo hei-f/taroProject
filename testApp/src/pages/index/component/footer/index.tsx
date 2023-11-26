@@ -12,7 +12,7 @@ import './index.scss'
 
 const Footer = () => {
   const [inputText, setInputText] = useState('')
-  const [model, setModel] = useState<string | number>('gpt-3')
+  const [model, setModel] = useState<string | number>('gpt-3.5-turbo')
   const [modelPickerVisible, setModelPickerVisible] = useState(false)
 
   const {
@@ -22,6 +22,11 @@ const Footer = () => {
     openApiKey,
     addConversation,
     conversationMap,
+    showResponse,
+    setConversation,
+    setId,
+    conversationTabs,
+    activeTab
   } = store
 
   const models = [
@@ -80,21 +85,58 @@ const Footer = () => {
       }
     }
 
-    addConversation('1', {
+    addConversation(id, {
       prompt: inputText,
       response: 'loading...',
     })
 
-    // conversationMap['1'].push({
-    //   prompt: inputText,
-    //   response: 'loading...',
-    // })
-    console.log(conversationMap)
+    // let res = {
+    //   "id": "chatcmpl-8PAkgYv13TVHAggRdbc5CZxOnwIyz",
+    //   "object": "chat.completion",
+    //   "created": 1701010222,
+    //   "model": "gpt-3.5-turbo-0613",
+    //   "choices": [
+    //     {
+    //       "index": 0,
+    //       "message": {
+    //         "role": "assistant",
+    //         "content": "Hello! How can I assist you today?"
+    //       },
+    //       "finish_reason": "stop"
+    //     }
+    //   ],
+    //   "usage": {
+    //     "prompt_tokens": 25,
+    //     "completion_tokens": 9,
+    //     "total_tokens": 34
+    //   }
+    // }
+    console.log('requestData', requestData)
+    Taro.request(requestData).then((res: any) => {
+      console.log('res', res)
+      let resId = res.data.id
+      let response = res.data.choices[0].message.content
 
-    // console.log(requestData)
-    // const res = await Taro.request(requestData)
-    // //
-    // console.log(res)
+
+      //如果id是'newConversation'，
+      // 则利用返回的resId创建对话，将当前id置为resId，将当前tab的id置为resId
+      //然后将'newConversation'的对话清空
+      if (id === 'newConversation') {
+        addConversation(resId, {
+          prompt: inputText,
+          response: response,
+        })
+
+        setId(resId)
+        conversationTabs[activeTab].id = resId
+        setConversation("newConversation", [])
+      } else {
+        console.log(111)
+        showResponse(resId, response)
+      }
+    })
+    setInputText('')
+
   }
 
   return (
