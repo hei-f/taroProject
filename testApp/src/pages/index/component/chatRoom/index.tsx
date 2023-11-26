@@ -5,6 +5,7 @@ import UserContent from "@/component/userContent";
 import GptContent from "@/component/gptContent";
 // @ts-ignore
 import {store} from "@/store";
+import {observer} from "mobx-react";
 
 
 const ChatRoom = (props: {
@@ -48,4 +49,4 @@ const ChatRoom = (props: {
 }
 
 
-export default ChatRoom;
+export default observer(ChatRoom);

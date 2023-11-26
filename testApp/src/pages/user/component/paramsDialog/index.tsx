@@ -7,7 +7,7 @@ const ParamsDialog = (props: {
     paramsDialogVisible,
   } = props
 
-  const formRef = Form.useForm()
+
 
   const onParamsDialogConfirm = () => {
 
@@ -23,9 +23,7 @@ const ParamsDialog = (props: {
       visible={paramsDialogVisible}
       title='高级设置'
       content={
-        <Form
-          form={formRef}
-        >
+        <Form>
           <Form.Item>
             <Input />
           </Form.Item>

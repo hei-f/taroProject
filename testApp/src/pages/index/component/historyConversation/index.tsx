@@ -1,4 +1,7 @@
 import {CSSProperties, useState} from "react";
+// @ts-ignore
+import {store} from "@/store";
+import {observer} from "mobx-react";
 import {Tabs, TabPane} from '@nutui/nutui-react-taro';
 import {Plus, CircleClose} from '@nutui/icons-react-taro'
 import {View} from "@tarojs/components";
@@ -6,32 +9,24 @@ import ChatRoom from "../chatRoom";
 import './index.scss'
 
 const HistoryConversation = () => {
-  const [activeTab, setActiveTab] = useState<any>('0')
 
-  const [historyConversationList, setHistoryConversationList] = useState<any[]>([
+  const [activeTab, setActiveTab] = useState(0)
+  const [conversationTabs, setConversationTabs] = useState<any[]>([
     {
       title: '历史对话1',
       id: '1',
     },
-    {
-      title: '历史对话2',
-      id: '2',
-    },
-    {
-      title: '历史对话3',
-      id: '3',
-    },
   ])
 
-  const onTabsClick = (item: string | number) => {
-    if (Number(item) !== historyConversationList.length) {
+  const onTabsClick = (item: number) => {
+    if (item !== conversationTabs.length) {
       setActiveTab(item)
     } else {
-      setHistoryConversationList(
-        [...historyConversationList,
+      setConversationTabs(
+        [...conversationTabs,
           {
-            title: `历史对话${historyConversationList.length + 1}`,
-            id: `${historyConversationList.length + 1}`,
+            title: `历史对话${conversationTabs.length + 1}`,
+            id: '',
           }
         ]
       )
@@ -41,17 +36,18 @@ const HistoryConversation = () => {
   const onTabClose = (index: number) => {
     return (
       () => {
-        if (historyConversationList.length === 1) {
-          setHistoryConversationList([
+        if (conversationTabs.length === 1) {
+          setConversationTabs([
             {
               title: '历史对话1',
-              id: '1',
+              id: '',
             },
           ])
-          setActiveTab('0')
+          setActiveTab(0)
+
         } else {
-          setHistoryConversationList(
-            historyConversationList.filter((_, i) => i !== index)
+          setConversationTabs(
+            conversationTabs.filter((_, i) => i !== index)
           )
         }
       }
@@ -83,10 +79,11 @@ const HistoryConversation = () => {
         autoHeight
       >
         {
-          historyConversationList.map((item, index) => (
+          conversationTabs.map((item, index) => (
               <TabPane
                 key={`${item.title}`}
                 className='historyConversationTabPane'
+                value={index}
                 // @ts-ignore
                 title={
                   <View
@@ -95,7 +92,7 @@ const HistoryConversation = () => {
                     {item.title}
                     <CircleClose
                       name='circle-close'
-                      color={index == activeTab ? '#89E5D2' : '#282C34'}
+                      color={index === activeTab ? '#89E5D2' : '#282C34'}
                       size='12px'
                       onClick={onTabClose(index)}
                     />
@@ -112,7 +109,7 @@ const HistoryConversation = () => {
 
         {
           <TabPane
-            key={`${setHistoryConversationList.length}-新增}`}
+            key={`${conversationTabs.length}-新增}`}
             // @ts-ignore
             title={
               <View
@@ -132,4 +129,4 @@ const HistoryConversation = () => {
   )
 }
 
-export default HistoryConversation;
+export default observer(HistoryConversation);

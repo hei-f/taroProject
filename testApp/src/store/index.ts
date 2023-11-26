@@ -21,34 +21,10 @@ class Store {
   conversationMap = {
     "1": [
       {
-        "prompt": "1",
-        "response": "2"
-      },
-      {
-        "prompt": "3",
-        "response": "4"
-      },
-    ],
-    "2": [
-      {
-        "prompt": "5",
-        "response": "6"
-      },
-      {
-        "prompt": "7",
-        "response": "8"
-      },
-    ],
-    "3": [
-      {
-        "prompt": "9",
-        "response": "10"
-      },
-      {
-        "prompt": "11",
-        "response": "12"
-      },
-    ],
+        prompt: "Hi, I'm a helpful assistant. Let's think step by step.",
+        response: "Hi, I'm a helpful assistant. Let's think step by step.",
+      }
+    ]
   }
   addConversation = (id: string, content: any) => {
     if (!this.conversationMap[id]) {
@@ -60,6 +36,19 @@ class Store {
   deleteConversation = (id: string) => {
     if (!this.conversationMap[id]) return;
     delete this.conversationMap[id];
+  }
+  getConversation = (id: string) => {
+    if (!this.conversationMap[id]) {
+      return []
+    } else {
+      return this.conversationMap[id]
+    }
+  }
+
+  //当前对话id
+  id = ''
+  setId = (id: string) => {
+    this.id = id;
   }
 
 

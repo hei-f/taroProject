@@ -5,34 +5,96 @@ import {View} from "@tarojs/components";
 import {Button, Image, TextArea, Picker} from "@nutui/nutui-react-taro";
 import {useState} from "react";
 // @ts-ignore
-import {models} from "@/utils/constant";
+import {store} from "@/store";
+import {observer} from "mobx-react";
 import './index.scss'
 
 
-const Footer = (
-  // props: {}
-) => {
-  // const {
-  //
-  // } = props
-
+const Footer = () => {
   const [inputText, setInputText] = useState('')
   const [model, setModel] = useState<string | number>('gpt-3')
   const [modelPickerVisible, setModelPickerVisible] = useState(false)
+
+  const {
+    system,
+    getConversation,
+    id,
+    openApiKey,
+    addConversation,
+    conversationMap,
+  } = store
+
+  const models = [
+    [
+      {
+        value: 'gpt-3.5-turbo',
+        text: 'gpt-3.5-turbo'
+      },
+      {
+        value: 'gpt-4.0-turbo',
+        text: 'gpt-4.0-turbo'
+      }
+    ]
+  ]
+
 
   const onInput = (value: string) => {
     setInputText(value)
   }
 
-  const onSubmit = () => {
-    Taro.request({
-      url: 'http://localhost:5000/chat',
+  const onSubmit = async () => {
+    const conversation = getConversation(id)
+    const context: any[] = []
+
+    for (let item of conversation) {
+      context.push({
+        role: "user",
+        content: item.prompt,
+      })
+      context.push({
+        role: "assistant",
+        content: item.response,
+      })
+    }
+
+    const requestData = {
+      url: 'https://api.openai.com/v1/chat/completions',
       method: 'POST',
       data: {
-        model,
-        text: inputText,
+        model: model,
+        messages: [
+          {
+            role: "system",
+            content: system,
+          },
+          ...context,
+          {
+            role: "user",
+            content: inputText,
+          }
+        ],
       },
+      header: {
+        'Authorization': `Bearer ${openApiKey}`,
+        'Content-Type': 'application/json',
+      }
+    }
+
+    addConversation('1', {
+      prompt: inputText,
+      response: 'loading...',
     })
+
+    // conversationMap['1'].push({
+    //   prompt: inputText,
+    //   response: 'loading...',
+    // })
+    console.log(conversationMap)
+
+    // console.log(requestData)
+    // const res = await Taro.request(requestData)
+    // //
+    // console.log(res)
   }
 
   return (
@@ -93,9 +155,9 @@ const Footer = (
             />
           </View>
         }
-      >
-      </Button>
+        onClick={onSubmit}
+      />
     </View>
   )
 }
-export default Footer;
+export default observer(Footer);
