@@ -1,4 +1,5 @@
 import {makeAutoObservable} from "mobx";
+import {Conversation, ConversationMap, ConversationTab, Params} from "../types";
 
 class Store {
   constructor() {
@@ -18,8 +19,8 @@ class Store {
   }
 
   //对话相关
-  conversationMap: any = {}
-  addConversation = (id: string, content: any) => {
+  conversationMap: ConversationMap = {}
+  addConversation = (id: string, content: Conversation) => {
     if (!this.conversationMap[id]) {
       this.conversationMap[id] = [content]
     } else {
@@ -47,8 +48,8 @@ class Store {
   showResponse = (id: string, content: string) => {
     this.conversationMap[id][this.conversationMap[id].length - 1].response = content;
   }
-  setConversation = (id: string, content: any) => {
-    this.conversationMap[id] = content;
+  setConversation = (id: string, contents: Conversation[]) => {
+    this.conversationMap[id] = contents;
   }
 
   //当前对话id
@@ -58,23 +59,24 @@ class Store {
   }
 
   //对话tabs相关
-  conversationTabs = [
+  conversationTabs: ConversationTab[] = [
     {
       title: '对话1',
       id: '1',
     },
   ]
-  setConversationTabs = (tabs: any) => {
+  setConversationTabs = (tabs: ConversationTab[]) => {
     this.conversationTabs = tabs;
   }
+
   activeTab = 0
   setActiveTab = (index: number) => {
     this.activeTab = index;
   }
 
   //可选参数相关
-  params = {}
-  setParams = (params: any) => {
+  params: Params = {}
+  setParams = (params: Params) => {
     this.params = params;
   }
 

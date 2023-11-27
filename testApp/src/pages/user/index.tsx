@@ -91,7 +91,6 @@ const User = () => {
     }
   }
 
-
   return (
     <View
       className='user'
@@ -162,8 +161,6 @@ const User = () => {
         paramsDialogVisible={paramsDialogVisible}
         setParamsDialogVisible={setParamsDialogVisible}
       />
-
-
     </View>
   )
 }

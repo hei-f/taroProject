@@ -3,9 +3,8 @@ import {View} from "@tarojs/components";
 import UserContent from "@/component/userContent";
 // @ts-ignore
 import GptContent from "@/component/gptContent";
-// @ts-ignore
-import {store} from "@/store";
 import {observer} from "mobx-react";
+import {store} from "../../../../store";
 
 
 const ChatRoom = (props: {
@@ -23,7 +22,7 @@ const ChatRoom = (props: {
   const conversationList = conversationMap[id] || []
 
   return (
-    <View >
+    <View>
       {
         conversationList && conversationList.map((item, index) => (
           <View

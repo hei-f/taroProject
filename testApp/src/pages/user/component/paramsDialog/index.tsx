@@ -1,7 +1,7 @@
 import {Button, Dialog, Form, Input,} from "@nutui/nutui-react-taro";
-// @ts-ignore
-import {store} from "@/store";
 import {View} from "@tarojs/components";
+import {store} from "../../../../store";
+import {Params, ParamsDialogValue} from "../../../../types";
 
 const ParamsDialog = (props: {
   paramsDialogVisible: boolean,
@@ -16,9 +16,16 @@ const ParamsDialog = (props: {
     setParams
   } = store
 
-  const onFinish = (values: any) => {
-    console.log('values:', values);
-    setParams(values)
+  const onFinish = (values: ParamsDialogValue) => {
+    // console.log('values:', values);
+    const params: Params = {}
+    if (values.frequency_penalty) {
+      params.frequency_penalty = Number(values.frequency_penalty)
+    }
+    if (values.presence_penalty) {
+      params.presence_penalty = Number(values.presence_penalty)
+    }
+    setParams(params)
     setParamsDialogVisible(false)
   }
 
@@ -73,6 +80,9 @@ const ParamsDialog = (props: {
             rules={[
               {
                 validator: (_ruleCfg, value: string): string | boolean | Promise<string | boolean> => {
+                  if (!value) {
+                    return true
+                  }
                   if (Number.isNaN(value)) {
                     return Promise.reject('请输入数字')
                   }
@@ -95,6 +105,9 @@ const ParamsDialog = (props: {
             rules={[
               {
                 validator: (_ruleCfg, value: string): string | boolean | Promise<string | boolean> => {
+                  if (!value) {
+                    return true
+                  }
                   if (Number.isNaN(value)) {
                     return Promise.reject('请输入数字')
                   }

@@ -4,10 +4,10 @@ import Taro from "@tarojs/taro";
 import {View} from "@tarojs/components";
 import {Button, Image, TextArea, Picker} from "@nutui/nutui-react-taro";
 import {useState} from "react";
-// @ts-ignore
-import {store} from "@/store";
 import {observer} from "mobx-react";
 import './index.scss'
+import {store} from "../../../../store";
+import {Context} from "../../../../types";
 
 
 const Footer = () => {
@@ -52,7 +52,7 @@ const Footer = () => {
       return
     }
     const conversation = getConversation(id)
-    const context: any[] = []
+    const context: Context[] = []
 
     for (let item of conversation) {
       context.push({
