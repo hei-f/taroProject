@@ -18,19 +18,26 @@ const GptContent = (props: {
         style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'start',
+          justifyContent: 'flex-start',
         }}
       >
-
-        <Image
-          src={gptIcon}
+        <View
           style={{
-            width: '20px',
-            height: '20px',
             marginRight: '10px'
           }}
-        />
-        <View>
+        >
+          <Image
+            src={gptIcon}
+            style={{
+              width: '20px',
+              height: '20px',
+            }}
+          />
+        </View>
+
+        <View
+          className='gpt-content'
+        >
           {children}
         </View>
       </View>

@@ -4,7 +4,8 @@ import {store} from "@/store";
 import {observer} from "mobx-react";
 import {Tabs, TabPane} from '@nutui/nutui-react-taro';
 import {Plus, CircleClose} from '@nutui/icons-react-taro'
-import {View} from "@tarojs/components";
+import {ScrollView, View} from "@tarojs/components";
+import Taro from "@tarojs/taro";
 import ChatRoom from "../chatRoom";
 import './index.scss'
 
@@ -16,18 +17,21 @@ const HistoryConversation = () => {
     activeTab,
     setActiveTab,
     deleteConversation,
-
+    setId,
   } = store
+
+  const windowInfo = Taro.getWindowInfo()
 
   const onTabsClick = (item: number) => {
     if (item !== conversationTabs.length) {
       setActiveTab(item)
+      setId(conversationTabs[item].id)
     } else {
       setConversationTabs(
         [...conversationTabs,
           {
-            title: `历史对话${conversationTabs.length + 1}`,
-            id: '',
+            title: `对话${conversationTabs.length + 1}`,
+            id: `${conversationTabs.length + 1}`,
           }
         ]
       )
@@ -40,8 +44,8 @@ const HistoryConversation = () => {
         if (conversationTabs.length === 1) {
           setConversationTabs([
             {
-              title: '历史对话1',
-              id: '',
+              title: '对话1',
+              id: '1',
             },
           ])
           setActiveTab(0)
@@ -72,7 +76,9 @@ const HistoryConversation = () => {
   }
 
   return (
-    <View>
+    <View
+      className='historyConversation'
+    >
       <Tabs
         className='historyConversationTabs'
         value={activeTab}
@@ -101,9 +107,24 @@ const HistoryConversation = () => {
                   </View>
                 }
               >
-                <ChatRoom
-                  id={item.id}
-                />
+                <ScrollView
+                  scrollY
+                  scrollWithAnimation
+                  scrollTop={0}
+                  style={{
+                    height: `${windowInfo.windowHeight - 110}px`,
+                    marginTop: '-25px',
+                  }}
+                  showScrollbar={false}
+                  lowerThreshold={-20}
+                  upperThreshold={0}
+                  enhanced
+                  clip={false}
+                >
+                  <ChatRoom
+                    id={item.id}
+                  />
+                </ScrollView>
               </TabPane>
             )
           )

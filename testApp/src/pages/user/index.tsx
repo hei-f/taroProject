@@ -160,6 +160,7 @@ const User = () => {
       />
       <ParamsDialog
         paramsDialogVisible={paramsDialogVisible}
+        setParamsDialogVisible={setParamsDialogVisible}
       />
 
 

@@ -13,7 +13,7 @@ const ChatRoom = (props: {
 }) => {
 
   const {
-    id
+    id,
   } = props
 
   const {
@@ -23,9 +23,7 @@ const ChatRoom = (props: {
   const conversationList = conversationMap[id] || []
 
   return (
-    <View
-      style={{marginTop: '-25px',}}
-    >
+    <View >
       {
         conversationList && conversationList.map((item, index) => (
           <View

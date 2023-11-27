@@ -1,14 +1,18 @@
-.historyConversationTabs {
-  --nutui-tabs-titles-background-color: #89E5D2;
-  --nutui-tabs-horizontal-tab-line-color: #89E5D2;
-  --nutui-tabs-horizontal-tab-line-opacity: 0.75;
-  --nutui-tabs-titles-border-radius: 10px;
+.historyConversation {
 
-  .addHistoryConversation {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    height: 40px;
+  .historyConversationTabs {
+    --nutui-tabs-titles-background-color: #89E5D2;
+    --nutui-tabs-horizontal-tab-line-color: #89E5D2;
+    --nutui-tabs-horizontal-tab-line-opacity: 0.75;
+    --nutui-tabs-titles-border-radius: 10px;
+
+    .addHistoryConversation {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      height: 40px;
+    }
   }
+
 }

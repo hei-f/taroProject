@@ -12,7 +12,7 @@ import './index.scss'
 
 const Footer = () => {
   const [inputText, setInputText] = useState('')
-  const [model, setModel] = useState<string | number>('gpt-3.5-turbo')
+  const [model, setModel] = useState<string>('gpt-3.5-turbo')
   const [modelPickerVisible, setModelPickerVisible] = useState(false)
 
   const {
@@ -21,12 +21,12 @@ const Footer = () => {
     id,
     openApiKey,
     addConversation,
-    conversationMap,
+    // conversationMap,
     showResponse,
-    setConversation,
-    setId,
-    conversationTabs,
-    activeTab
+    // setConversation,
+    // setId,
+    // conversationTabs,
+    // activeTab
   } = store
 
   const models = [
@@ -48,6 +48,9 @@ const Footer = () => {
   }
 
   const onSubmit = async () => {
+    if (!inputText) {
+      return
+    }
     const conversation = getConversation(id)
     const context: any[] = []
 
@@ -90,52 +93,38 @@ const Footer = () => {
       response: 'loading...',
     })
 
-    // let res = {
-    //   "id": "chatcmpl-8PAkgYv13TVHAggRdbc5CZxOnwIyz",
-    //   "object": "chat.completion",
-    //   "created": 1701010222,
-    //   "model": "gpt-3.5-turbo-0613",
-    //   "choices": [
-    //     {
-    //       "index": 0,
-    //       "message": {
-    //         "role": "assistant",
-    //         "content": "Hello! How can I assist you today?"
-    //       },
-    //       "finish_reason": "stop"
-    //     }
-    //   ],
-    //   "usage": {
-    //     "prompt_tokens": 25,
-    //     "completion_tokens": 9,
-    //     "total_tokens": 34
-    //   }
-    // }
-    console.log('requestData', requestData)
-    Taro.request(requestData).then((res: any) => {
-      console.log('res', res)
-      let resId = res.data.id
-      let response = res.data.choices[0].message.content
-
-
-      //如果id是'newConversation'，
-      // 则利用返回的resId创建对话，将当前id置为resId，将当前tab的id置为resId
-      //然后将'newConversation'的对话清空
-      if (id === 'newConversation') {
-        addConversation(resId, {
-          prompt: inputText,
-          response: response,
-        })
-
-        setId(resId)
-        conversationTabs[activeTab].id = resId
-        setConversation("newConversation", [])
-      } else {
-        console.log(111)
-        showResponse(resId, response)
+    let res = {
+      "id": "chatcmpl-8PAkgYv13TVHAggRdbc5CZxOnwIyz",
+      "object": "chat.completion",
+      "created": 1701010222,
+      "model": "gpt-3.5-turbo-0613",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "Hello! How can I assist you today?"
+          },
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 25,
+        "completion_tokens": 9,
+        "total_tokens": 34
       }
-    })
+    }
+    // console.log('requestData', requestData)
+    // Taro.request(requestData).then((res: any) => {
+    // console.log('res', res)
+    let response = res.choices[0].message.content
+
+    showResponse(id, response)
+
+    // })
     setInputText('')
+
+    console.log(Taro.getWindowInfo())
 
   }
 
@@ -147,22 +136,24 @@ const Footer = () => {
         onClick={() => {
           setModelPickerVisible(!modelPickerVisible)
         }}
+        color='#282C34'
       >
         <View
           style={{
             textAlign: 'center',
             height: '100%',
             lineHeight: '100%',
+            color: '#98C379',
           }}
         >
-          {model}
+          {model.slice(0, -6)}
         </View>
       </Button>
       <Picker
         visible={modelPickerVisible}
         options={models}
         defaultValue={[model]}
-        onConfirm={(_list, values) => {
+        onConfirm={(_list, values: string[]) => {
           setModel(values[0])
         }}
         onClose={() => setModelPickerVisible(false)}
@@ -180,7 +171,7 @@ const Footer = () => {
 
       <Button
         // fill='outline'
-        color='rgba(230, 230, 230, 0.5)'
+        color='rgba(240, 240, 240, 1)'
         icon={
           <View style={{
             display: 'flex',

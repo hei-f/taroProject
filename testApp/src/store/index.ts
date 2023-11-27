@@ -18,9 +18,7 @@ class Store {
   }
 
   //对话相关
-  conversationMap: any = {
-    "newConversation": []
-  }
+  conversationMap: any = {}
   addConversation = (id: string, content: any) => {
     if (!this.conversationMap[id]) {
       this.conversationMap[id] = [content]
@@ -54,16 +52,16 @@ class Store {
   }
 
   //当前对话id
-  id = 'newConversation'
+  id = '1'
   setId = (id: string) => {
     this.id = id;
   }
 
-  //历史对话相关
+  //对话tabs相关
   conversationTabs = [
     {
-      title: '历史对话1',
-      id: 'newConversation',
+      title: '对话1',
+      id: '1',
     },
   ]
   setConversationTabs = (tabs: any) => {
@@ -74,6 +72,11 @@ class Store {
     this.activeTab = index;
   }
 
+  //可选参数相关
+  params = {}
+  setParams = (params: any) => {
+    this.params = params;
+  }
 
 }
 
