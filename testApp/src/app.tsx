@@ -1,16 +1,96 @@
 import {Component, PropsWithChildren} from 'react'
+import {observer} from "mobx-react";
+import Taro from "@tarojs/taro";
 import './app.scss'
+import {store} from "./store";
+
 
 class App extends Component <PropsWithChildren> {
 
+  //onLaunch、onLoad、onReady
   componentDidMount() {
+    //要存在storage中的数据   id根据activeTab判断，不存储
+    //key、system 、 conversationMap、conversationTabs、params
+    //key、system、params 参数相关数据在设置之后存储
+    //conversationMap、conversationTabs 对话相关数据在onUnload中存储
+
+    console.log(1)
+    const conversationStr = Taro.getStorageSync('conversationInfo')
+    const paramsStr = Taro.getStorageSync('paramsInfo')
+
+    const {
+      setOpenApiKey,
+      setSystem,
+      setConversationMap,
+      setConversationTabs,
+      setParams
+    } = store
+
+    if (conversationStr) {
+      console.log(2)
+
+      const value = JSON.parse(conversationStr)
+      if (value.conversationMap) {
+        setConversationMap(value.conversationMap)
+      }
+      if (value.conversationTabs) {
+        console.log(4)
+        setConversationTabs(value.conversationTabs)
+      }
+    }
+
+    if (paramsStr) {
+      console.log(3)
+      const value = JSON.parse(paramsStr)
+      if (value.key) {
+        console.log(5)
+        setOpenApiKey(value.key)
+      }
+      if (value.system) {
+        setSystem(value.system)
+      }
+      if (value.params) {
+        setParams(value.params)
+      }
+    }
   }
 
-  componentDidShow() {
+  //TODO:关闭时保存对话数据三种方法 onSaveExitState、onUnload、index的useEffect
+  onSaveExitState() {
+    console.log(7)
+    const {
+      conversationMap,
+      conversationTabs
+    } = store
+
+    const conversationInfo = JSON.stringify({
+      conversationMap: conversationMap,
+      conversationTabs: conversationTabs
+    })
+
+    Taro.setStorageSync('conversationInfo', conversationInfo)
   }
 
-  componentDidHide() {
+  onUnload() {
+    console.log(6)
+    const {
+      conversationMap,
+      conversationTabs
+    } = store
+
+    const conversationInfo = JSON.stringify({
+      conversationMap: conversationMap,
+      conversationTabs: conversationTabs
+    })
+
+    Taro.setStorageSync('conversationInfo', conversationInfo)
   }
+
+  // componentDidShow() {
+  // }
+
+  // componentDidHide() {
+  // }
 
   // this.props.children 是将要会渲染的页面
   render() {
@@ -18,4 +98,4 @@ class App extends Component <PropsWithChildren> {
   }
 }
 
-export default App
+export default observer(App)

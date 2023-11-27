@@ -18,15 +18,14 @@ const Footer = () => {
   const {
     system,
     getConversation,
-    id,
     openApiKey,
     addConversation,
     // conversationMap,
     showResponse,
     // setConversation,
-    // setId,
     // conversationTabs,
     // activeTab
+    id,
   } = store
 
   const models = [
@@ -65,6 +64,7 @@ const Footer = () => {
       })
     }
 
+    //TODO:请求数据的类型约束
     const requestData = {
       url: 'https://api.openai.com/v1/chat/completions',
       method: 'POST',

@@ -1,14 +1,35 @@
 import {observer} from "mobx-react";
 import {View} from '@tarojs/components'
 import Taro from "@tarojs/taro";
+import {useEffect} from "react";
 import HistoryConversation from "./component/historyConversation";
 import Footer from "./component/footer";
 import './index.scss'
+import {store} from "../../store";
 
 
 const Index = () => {
 
   const windowInfo = Taro.getWindowInfo()
+
+  useEffect(() => {
+
+    return (() => {
+      console.log(8)
+      const {
+        conversationMap,
+        conversationTabs
+      } = store
+
+      const conversationInfo = JSON.stringify({
+        conversationMap: conversationMap,
+        conversationTabs: conversationTabs
+      })
+
+      Taro.setStorageSync('conversationInfo', conversationInfo)
+    })
+  }, []);
+
   return (
     <View
       className='container'

@@ -1,3 +1,6 @@
+import Taro from "@tarojs/taro";
+import {observer} from "mobx-react";
+import {FormItemRuleWithoutValidator} from "@nutui/nutui-react-taro/dist/types/packages/form/types";
 import {Button, Dialog, Form, Input,} from "@nutui/nutui-react-taro";
 import {View} from "@tarojs/components";
 import {store} from "../../../../store";
@@ -13,24 +16,48 @@ const ParamsDialog = (props: {
   } = props
 
   const {
-    setParams
+    setParams,
+    openApiKey,
+    system,
   } = store
 
   const onFinish = (values: ParamsDialogValue) => {
     // console.log('values:', values);
-    const params: Params = {}
+    const paramsValue: Params = {}
     if (values.frequency_penalty) {
-      params.frequency_penalty = Number(values.frequency_penalty)
+      paramsValue.frequency_penalty = Number(values.frequency_penalty)
     }
     if (values.presence_penalty) {
-      params.presence_penalty = Number(values.presence_penalty)
+      paramsValue.presence_penalty = Number(values.presence_penalty)
     }
-    setParams(params)
+
+    setParams(paramsValue)
+
+    let paramsInfo = JSON.stringify({
+      key: openApiKey,
+      system: system,
+      params: paramsValue
+    })
+    Taro.setStorageSync('paramsInfo', paramsInfo)
     setParamsDialogVisible(false)
   }
 
   const onOverlayClick = () => {
     setParamsDialogVisible(false)
+  }
+
+  const validator = (_ruleCfg: FormItemRuleWithoutValidator, value: string): string | boolean | Promise<string | boolean> => {
+    if (!value) {
+      return true
+    }
+    if (Number.isNaN(value)) {
+      return Promise.reject('请输入数字')
+    }
+    if (Number(value) >= -2.0 && Number(value) <= 2.0) {
+      return true
+    } else {
+      return Promise.reject('请输入介于 -2.0 和 2.0 之间的数字')
+    }
   }
 
   //frequency_penalty number or null Defaults to 0 Number between -2.0 and 2.0
@@ -79,19 +106,7 @@ const ParamsDialog = (props: {
             errorMessageAlign='left'
             rules={[
               {
-                validator: (_ruleCfg, value: string): string | boolean | Promise<string | boolean> => {
-                  if (!value) {
-                    return true
-                  }
-                  if (Number.isNaN(value)) {
-                    return Promise.reject('请输入数字')
-                  }
-                  if (Number(value) >= -2.0 && Number(value) <= 2.0) {
-                    return true
-                  } else {
-                    return Promise.reject('请输入介于 -2.0 和 2.0 之间的数字')
-                  }
-                }
+                validator: validator
               }
             ]}
           >
@@ -104,19 +119,7 @@ const ParamsDialog = (props: {
             errorMessageAlign='left'
             rules={[
               {
-                validator: (_ruleCfg, value: string): string | boolean | Promise<string | boolean> => {
-                  if (!value) {
-                    return true
-                  }
-                  if (Number.isNaN(value)) {
-                    return Promise.reject('请输入数字')
-                  }
-                  if (Number(value) >= -2.0 && Number(value) <= 2.0) {
-                    return true
-                  } else {
-                    return Promise.reject('请输入介于 -2.0 和 2.0 之间的数字')
-                  }
-                }
+                validator: validator
               }
             ]}
           >
@@ -128,4 +131,4 @@ const ParamsDialog = (props: {
   )
 }
 
-export default ParamsDialog
+export default observer(ParamsDialog)

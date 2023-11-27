@@ -1,6 +1,4 @@
 import {CSSProperties} from "react";
-// @ts-ignore
-import {store} from "@/store";
 import {observer} from "mobx-react";
 import {Tabs, TabPane} from '@nutui/nutui-react-taro';
 import {Plus, CircleClose} from '@nutui/icons-react-taro'
@@ -8,6 +6,7 @@ import {ScrollView, View} from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import ChatRoom from "../chatRoom";
 import './index.scss'
+import {store} from "../../../../store";
 
 const HistoryConversation = () => {
 
@@ -17,7 +16,6 @@ const HistoryConversation = () => {
     activeTab,
     setActiveTab,
     deleteConversation,
-    setId,
   } = store
 
   const windowInfo = Taro.getWindowInfo()
@@ -25,7 +23,6 @@ const HistoryConversation = () => {
   const onTabsClick = (item: number) => {
     if (item !== conversationTabs.length) {
       setActiveTab(item)
-      setId(conversationTabs[item].id)
     } else {
       setConversationTabs(
         [...conversationTabs,
@@ -55,6 +52,9 @@ const HistoryConversation = () => {
           setConversationTabs(
             conversationTabs.filter((_, i) => i !== index)
           )
+          if (index === activeTab) {
+            setActiveTab(index - 1)
+          }
         }
       }
     )

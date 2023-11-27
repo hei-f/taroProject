@@ -51,11 +51,8 @@ class Store {
   setConversation = (id: string, contents: Conversation[]) => {
     this.conversationMap[id] = contents;
   }
-
-  //当前对话id
-  id = '1'
-  setId = (id: string) => {
-    this.id = id;
+  setConversationMap = (map: ConversationMap) => {
+    this.conversationMap = map;
   }
 
   //对话tabs相关
@@ -72,6 +69,10 @@ class Store {
   activeTab = 0
   setActiveTab = (index: number) => {
     this.activeTab = index;
+  }
+
+  get id() {
+    return this.conversationTabs[this.activeTab].id;
   }
 
   //可选参数相关

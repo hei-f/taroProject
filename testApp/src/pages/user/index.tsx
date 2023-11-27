@@ -4,8 +4,10 @@ import {store} from '@/store'
 import {Cell, Dialog, Input} from "@nutui/nutui-react-taro";
 import {observer} from "mobx-react";
 import {useState} from "react";
+import Taro from "@tarojs/taro";
 import './index.scss'
 import ParamsDialog from "./component/paramsDialog";
+
 
 const User = () => {
   const {
@@ -13,6 +15,7 @@ const User = () => {
     setOpenApiKey,
     system,
     setSystem,
+    params
   } = store
 
   const [keyDialogVisible, setKeyDialogVisible] = useState(false)
@@ -60,15 +63,31 @@ const User = () => {
   }
 
   const handleDialogConfirm = (type: string) => {
+
+
     switch (type) {
       case 'apiKey':
         return (() => {
           setOpenApiKey(inputKey)
+          let paramsInfo = JSON.stringify({
+            key: inputKey,
+            system: system,
+            params: params
+          })
+          Taro.setStorageSync('paramsInfo', paramsInfo)
           setKeyDialogVisible(false)
+
         })
       case 'system':
         return (() => {
           setSystem(inputSystem)
+
+          let paramsInfo = JSON.stringify({
+            key: openApiKey,
+            system: inputSystem,
+            params: params
+          })
+          Taro.setStorageSync('paramsInfo', paramsInfo)
           setSystemDialogVisible(false)
         })
       default:
