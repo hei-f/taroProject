@@ -122,9 +122,9 @@ const Footer = () => {
     showResponse(id, response)
 
     // })
-    setInputText('')
+    // setInputText('')
 
-    console.log(Taro.getWindowInfo())
+    // console.log(Taro.getWindowInfo())
 
   }
 

@@ -100,7 +100,7 @@ const User = () => {
       <Cell
         className='apiKey'
         title='设置ApiKey'
-        extra={openApiKey}
+        extra={`${openApiKey.substring(0, 5)}******${openApiKey.substring(openApiKey.length - 5)}`}
         align='center'
         onClick={handleCellClick('apiKey')}
         style={{
