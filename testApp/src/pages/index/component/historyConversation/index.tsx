@@ -1,4 +1,4 @@
-import {CSSProperties} from "react";
+import {CSSProperties, MouseEvent} from "react";
 import {observer} from "mobx-react";
 import {Tabs, TabPane} from '@nutui/nutui-react-taro';
 import {Plus, CircleClose} from '@nutui/icons-react-taro'
@@ -25,11 +25,12 @@ const HistoryConversation = () => {
     if (item !== conversationTabs.length) {
       setActiveTab(item)
     } else {
+      const id = Number(conversationTabs[conversationTabs.length - 1].id) + 1
       setConversationTabs(
         [...conversationTabs,
           {
-            title: `对话${conversationTabs.length + 1}`,
-            id: `${conversationTabs.length + 1}`,
+            title: `对话${id}`,
+            id: `${id}`,
           }
         ]
       )
@@ -38,7 +39,9 @@ const HistoryConversation = () => {
 
   const onTabClose = (index: number) => {
     return (
-      () => {
+      (event: MouseEvent) => {
+        event.stopPropagation() //阻止冒泡，不然会切换activeTab
+
         if (conversationTabs.length === 1) {
           setConversationTabs([
             {
@@ -46,14 +49,19 @@ const HistoryConversation = () => {
               id: '1',
             },
           ])
+
           setActiveTab(0)
           deleteConversation()
+
         } else {
+
           deleteConversation(conversationTabs[index].id)
+
           setConversationTabs(
             conversationTabs.filter((_, i) => i !== index)
           )
-          if (index === activeTab) {
+
+          if (index === activeTab && index !== 0) {
             setActiveTab(index - 1)
           }
         }
@@ -65,7 +73,7 @@ const HistoryConversation = () => {
     return ({
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'space-evenly',
       alignItems: 'center',
       border: `${index == activeTab ? '#89E5D2' : '#282C34'} solid 1px`,
       height: "40px",
@@ -73,6 +81,7 @@ const HistoryConversation = () => {
       backgroundColor: index == activeTab ? '#282C34' : '#89E5D2',
       fontWeight: "550",
       color: index == activeTab ? '#89E5D2' : '#282C34',
+      width: '70px',
     })
   }
 
@@ -113,7 +122,7 @@ const HistoryConversation = () => {
                   scrollWithAnimation
                   scrollTop={0}
                   style={{
-                    height: `${windowInfo.windowHeight - 110}px`,
+                    height: `${windowInfo.windowHeight - 100}px`,
                     marginTop: '-25px',
                   }}
                   showScrollbar={false}

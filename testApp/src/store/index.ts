@@ -30,7 +30,7 @@ class Store {
   deleteConversation = (id?: string) => {
     if (!id) {
       this.conversationMap = {
-        "newConversation": []
+        "1": []
       }
       return;
     }
@@ -71,8 +71,12 @@ class Store {
     this.activeTab = index;
   }
 
-  get id() {
-    return this.conversationTabs[this.activeTab].id;
+  get getId() {
+    if (this.conversationTabs && this.conversationTabs[this.activeTab]) {
+      return this.conversationTabs[this.activeTab].id;
+    } else {
+      return '1'
+    }
   }
 
   //可选参数相关

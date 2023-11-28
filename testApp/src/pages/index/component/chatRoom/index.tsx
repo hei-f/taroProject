@@ -26,16 +26,26 @@ const ChatRoom = (props: {
           <View
             key={index}
           >
-            <UserContent>
-              {
-                item.prompt
-              }
-            </UserContent>
-            <GptContent>
-              {
-                item.response
-              }
-            </GptContent>
+            <View >
+              <UserContent>
+                {
+                  item.prompt
+                }
+              </UserContent>
+            </View>
+
+            <View
+              style={{
+                paddingBottom: '0.5px',
+              }}
+            >
+              <GptContent>
+                {
+                  item.response
+                }
+              </GptContent>
+            </View>
+
           </View>
         ))
       }
