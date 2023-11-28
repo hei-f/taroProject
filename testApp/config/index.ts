@@ -18,7 +18,7 @@ const config = {
     375: 2 / 1,
   },
   alias: {
-    '@': path.resolve(__dirname, '..', 'src'),
+    'src': path.resolve(__dirname, '..', 'src'),
   },
   sourceRoot: "src",
   outputRoot: "dist",

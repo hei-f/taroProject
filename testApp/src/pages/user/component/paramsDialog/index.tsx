@@ -3,8 +3,8 @@ import {observer} from "mobx-react";
 import {FormItemRuleWithoutValidator} from "@nutui/nutui-react-taro/dist/types/packages/form/types";
 import {Button, Dialog, Form, Input,} from "@nutui/nutui-react-taro";
 import {View} from "@tarojs/components";
-import {store} from "../../../../store";
-import {Params, ParamsDialogValue} from "../../../../types";
+import {store} from "src/store";
+import {Params, ParamsDialogValue} from "src/types";
 
 const ParamsDialog = (props: {
   paramsDialogVisible: boolean,

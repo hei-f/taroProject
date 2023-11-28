@@ -1,8 +1,8 @@
 import {Component, PropsWithChildren} from 'react'
 import {observer} from "mobx-react";
 import Taro from "@tarojs/taro";
+import {store} from "src/store";
 import './app.scss'
-import {store} from "./store";
 
 
 class App extends Component <PropsWithChildren> {

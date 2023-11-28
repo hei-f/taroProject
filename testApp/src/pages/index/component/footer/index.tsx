@@ -1,13 +1,13 @@
 //@ts-ignore
-import send from '@/assets/images/send.png'
+import send from 'src/assets/images/send.png'
 import Taro from "@tarojs/taro";
 import {View} from "@tarojs/components";
 import {Button, Image, TextArea, Picker} from "@nutui/nutui-react-taro";
 import {useState} from "react";
 import {observer} from "mobx-react";
+import {store} from "src/store";
+import {Context} from "src/types";
 import './index.scss'
-import {store} from "../../../../store";
-import {Context} from "../../../../types";
 
 
 const Footer = () => {

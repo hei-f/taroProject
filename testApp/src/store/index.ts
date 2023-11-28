@@ -1,5 +1,5 @@
 import {makeAutoObservable} from "mobx";
-import {Conversation, ConversationMap, ConversationTab, Params} from "../types";
+import {Conversation, ConversationMap, ConversationTab, Params} from "src/types";
 
 class Store {
   constructor() {

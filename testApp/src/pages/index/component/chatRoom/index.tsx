@@ -1,10 +1,8 @@
 import {View} from "@tarojs/components";
-// @ts-ignore
-import UserContent from "@/component/userContent";
-// @ts-ignore
-import GptContent from "@/component/gptContent";
+import UserContent from "src/component/userContent";
 import {observer} from "mobx-react";
-import {store} from "../../../../store";
+import GptContent from "src/component/gptContent";
+import {store} from "src/store";
 
 
 const ChatRoom = (props: {

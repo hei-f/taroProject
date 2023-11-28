@@ -1,12 +1,11 @@
 import {View} from "@tarojs/components";
-// @ts-ignore
-import {store} from '@/store'
+import {store} from 'src/store'
 import {Cell, Dialog, Input} from "@nutui/nutui-react-taro";
 import {observer} from "mobx-react";
 import {useState} from "react";
+import ParamsDialog from "src/pages/user/component/paramsDialog";
 import Taro from "@tarojs/taro";
 import './index.scss'
-import ParamsDialog from "./component/paramsDialog";
 
 
 const User = () => {

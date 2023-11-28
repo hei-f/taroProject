@@ -4,9 +4,10 @@ import {Tabs, TabPane} from '@nutui/nutui-react-taro';
 import {Plus, CircleClose} from '@nutui/icons-react-taro'
 import {ScrollView, View} from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import ChatRoom from "../chatRoom";
+import {store} from "src/store";
+import ChatRoom from "src/pages/index/component/chatRoom";
 import './index.scss'
-import {store} from "../../../../store";
+
 
 const HistoryConversation = () => {
 

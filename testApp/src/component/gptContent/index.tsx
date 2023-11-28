@@ -1,6 +1,6 @@
 import {Cell, Image} from "@nutui/nutui-react-taro";
 // @ts-ignore
-import gptIcon from "@/assets/images/gptIcon.png";
+import gptIcon from "src/assets/images/gptIcon.png";
 import {View} from "@tarojs/components";
 
 const GptContent = (props: {
