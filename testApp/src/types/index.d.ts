@@ -49,12 +49,19 @@ export type RequestHeader = {
   "Content-Type"?: string
 }
 
-//chatRequest参数
-export type RequestData = {
+//request参数
+export type Request = {
   url: string,
   method: string,
-  data: ChatRequestData,
   header?: RequestHeader,
 }
+
+//chatRequest参数
+export type ChatRequest = Request & {
+  data: ChatRequestData,
+}
+
+//request响应数据
+
 
 

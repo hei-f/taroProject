@@ -21,7 +21,9 @@
             "ignore": [],
             "disablePlugins": [],
             "outputPath": ""
-        }
+        },
+        "minifyWXSS": true,
+        "minifyWXML": true
     },
     "compileType": "miniprogram",
     "simulatorType": "wechat",

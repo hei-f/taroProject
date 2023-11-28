@@ -5,7 +5,8 @@ import {Button, Image, TextArea, Picker} from "@nutui/nutui-react-taro";
 import {useState} from "react";
 import {observer} from "mobx-react";
 import {store} from "src/store";
-import {Context, RequestData} from "src/types";
+import {chatRequest} from "src/api";
+import {ChatRequestData, Context} from "src/types";
 import './index.scss'
 
 
@@ -63,28 +64,19 @@ const Footer = () => {
       })
     }
 
-    //TODO:请求数据的类型约束
-    const requestData: RequestData = {
-      url: 'https://api.openai.com/v1/chat/completions',
-      method: 'POST',
-      data: {
-        model: model,
-        messages: [
-          {
-            role: "system",
-            content: system,
-          },
-          ...context,
-          {
-            role: "user",
-            content: inputText,
-          }
-        ],
-      },
-      header: {
-        'Authorization': `Bearer ${openApiKey}`,
-        'Content-Type': 'application/json',
-      }
+    const requestData: ChatRequestData = {
+      model: model,
+      messages: [
+        {
+          role: "system",
+          content: system,
+        },
+        ...context,
+        {
+          role: "user",
+          content: inputText,
+        }
+      ],
     }
 
     addConversation(getId, {
@@ -92,38 +84,15 @@ const Footer = () => {
       response: 'loading...',
     })
 
-    let res = {
-      "id": "chatcmpl-8PAkgYv13TVHAggRdbc5CZxOnwIyz",
-      "object": "chat.completion",
-      "created": 1701010222,
-      "model": "gpt-3.5-turbo-0613",
-      "choices": [
-        {
-          "index": 0,
-          "message": {
-            "role": "assistant",
-            "content": "Hello! How can I assist you today?"
-          },
-          "finish_reason": "stop"
-        }
-      ],
-      "usage": {
-        "prompt_tokens": 25,
-        "completion_tokens": 9,
-        "total_tokens": 34
-      }
-    }
-    // console.log('requestData', requestData)
-    // Taro.request(requestData).then((res: any) => {
-    // console.log('res', res)
-    let response = res.choices[0].message.content
+    setInputText('')
+    chatRequest(requestData, openApiKey).then((res: any) => {
+      console.log('res=', res)
+      let response = res.data.choices[0].message.content
+      showResponse(getId, response)
+    }).catch((err: any) => {
 
-    showResponse(getId, response)
-
-    // })
-    // setInputText('')
-
-    // console.log(Taro.getWindowInfo())
+      console.log('err=', err)
+    })
 
   }
 

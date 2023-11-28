@@ -24,6 +24,7 @@ const User = () => {
   const [inputSystem, setInputSystem] = useState('')
 
   const [paramsDialogVisible, setParamsDialogVisible] = useState(false)
+  const [clearStorageDialogVisible, setClearStorageDialogVisible] = useState(false)
 
   const handleCellClick = (type: string) => {
     switch (type) {
@@ -40,6 +41,10 @@ const User = () => {
       case 'params':
         return (() => {
           setParamsDialogVisible(true)
+        })
+      case 'clearStorage':
+        return (() => {
+          setClearStorageDialogVisible(true)
         })
       default:
         break
@@ -62,7 +67,6 @@ const User = () => {
   }
 
   const handleDialogConfirm = (type: string) => {
-
 
     switch (type) {
       case 'apiKey':
@@ -89,6 +93,11 @@ const User = () => {
           Taro.setStorageSync('paramsInfo', paramsInfo)
           setSystemDialogVisible(false)
         })
+      case 'clearStorage':
+        return (() => {
+          Taro.clearStorage()
+          setClearStorageDialogVisible(false)
+        })
       default:
         break
     }
@@ -103,6 +112,10 @@ const User = () => {
       case 'system':
         return (() => {
           setSystemDialogVisible(false)
+        })
+      case 'clearStorage':
+        return (() => {
+          setClearStorageDialogVisible(false)
         })
       default:
         break
@@ -179,6 +192,24 @@ const User = () => {
         paramsDialogVisible={paramsDialogVisible}
         setParamsDialogVisible={setParamsDialogVisible}
       />
+
+      <Cell
+        className='clearStorage'
+        title='清除缓存'
+        align='center'
+        onClick={handleCellClick('clearStorage')}
+        style={{
+          boxShadow: '2px 2px 2px rgba(0, 0, 0, 0.25)',
+        }}
+      />
+      <Dialog
+        className='clearStorageDialog'
+        visible={clearStorageDialogVisible}
+        title='确定要清除缓存吗'
+        onConfirm={handleDialogConfirm('clearStorage')}
+        onCancel={handleDialogCancel('clearStorage')}
+      />
+
     </View>
   )
 }
