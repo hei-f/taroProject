@@ -1,12 +1,11 @@
 //@ts-ignore
-import send from 'src/assets/images/send.png'
-import Taro from "@tarojs/taro";
+import send from 'src/assets/images/send_green.png'
 import {View} from "@tarojs/components";
 import {Button, Image, TextArea, Picker} from "@nutui/nutui-react-taro";
 import {useState} from "react";
 import {observer} from "mobx-react";
 import {store} from "src/store";
-import {Context} from "src/types";
+import {Context, RequestData} from "src/types";
 import './index.scss'
 
 
@@ -25,7 +24,7 @@ const Footer = () => {
     // setConversation,
     // conversationTabs,
     // activeTab
-    id,
+    getId,
   } = store
 
   const models = [
@@ -50,7 +49,7 @@ const Footer = () => {
     if (!inputText) {
       return
     }
-    const conversation = getConversation(id)
+    const conversation = getConversation(getId)
     const context: Context[] = []
 
     for (let item of conversation) {
@@ -65,7 +64,7 @@ const Footer = () => {
     }
 
     //TODO:请求数据的类型约束
-    const requestData = {
+    const requestData: RequestData = {
       url: 'https://api.openai.com/v1/chat/completions',
       method: 'POST',
       data: {
@@ -88,7 +87,7 @@ const Footer = () => {
       }
     }
 
-    addConversation(id, {
+    addConversation(getId, {
       prompt: inputText,
       response: 'loading...',
     })
@@ -119,7 +118,7 @@ const Footer = () => {
     // console.log('res', res)
     let response = res.choices[0].message.content
 
-    showResponse(id, response)
+    showResponse(getId, response)
 
     // })
     // setInputText('')
@@ -137,6 +136,10 @@ const Footer = () => {
           setModelPickerVisible(!modelPickerVisible)
         }}
         color='#282C34'
+        style={{
+          paddingLeft: '7px',
+          paddingRight: '7px',
+        }}
       >
         <View
           style={{
@@ -144,6 +147,7 @@ const Footer = () => {
             height: '100%',
             lineHeight: '100%',
             color: '#98C379',
+            width: '42px',
           }}
         >
           {model.slice(0, -6)}
@@ -171,7 +175,7 @@ const Footer = () => {
 
       <Button
         // fill='outline'
-        color='rgba(240, 240, 240, 1)'
+        color='#282C34'
         icon={
           <View style={{
             display: 'flex',

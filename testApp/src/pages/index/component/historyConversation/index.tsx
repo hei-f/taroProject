@@ -18,7 +18,8 @@ const HistoryConversation = () => {
     setActiveTab,
     deleteConversation,
     closeIconVisible,
-    setCloseIconVisible
+    setCloseIconVisible,
+    clearCloseIconVisible
   } = store
 
   let timeoutId: string | number | NodeJS.Timeout | undefined;
@@ -27,6 +28,7 @@ const HistoryConversation = () => {
     return (
       () => {
         timeoutId = setTimeout(() => {
+          clearCloseIconVisible()
           setCloseIconVisible(id, true)
         }, 1000)
       }
@@ -78,13 +80,13 @@ const HistoryConversation = () => {
               id: '1',
             },
           ])
-
           setActiveTab(0)
           deleteConversation()
-
+          clearCloseIconVisible()
         } else {
 
           deleteConversation(conversationTabs[index].id)
+          setCloseIconVisible(conversationTabs[index].id, false)
 
           setConversationTabs(
             conversationTabs.filter((_, i) => i !== index)

@@ -82,8 +82,10 @@ class Store {
   //tab的closeIcon相关
   closeIconVisible: CloseIconVisible = {}
   setCloseIconVisible = (id: string, visible: boolean) => {
-    this.closeIconVisible = {}
     this.closeIconVisible[id] = visible;
+  }
+  clearCloseIconVisible = () => {
+    this.closeIconVisible = {}
   }
 
   //可选参数相关
