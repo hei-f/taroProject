@@ -27,4 +27,8 @@ export type ParamsDialogValue = {
   presence_penalty?: string,
 }
 
+export type CloseIconVisible = {
+  [key: string]: boolean,
+}
+
 

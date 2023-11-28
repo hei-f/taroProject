@@ -1,4 +1,4 @@
-import {CSSProperties, MouseEvent} from "react";
+import {CSSProperties, useEffect} from "react";
 import {observer} from "mobx-react";
 import {Tabs, TabPane} from '@nutui/nutui-react-taro';
 import {Plus, CircleClose} from '@nutui/icons-react-taro'
@@ -17,7 +17,36 @@ const HistoryConversation = () => {
     activeTab,
     setActiveTab,
     deleteConversation,
+    closeIconVisible,
+    setCloseIconVisible
   } = store
+
+  let timeoutId: string | number | NodeJS.Timeout | undefined;
+
+  const handleTouchStart = (id: string) => {
+    return (
+      () => {
+        timeoutId = setTimeout(() => {
+          setCloseIconVisible(id, true)
+        }, 1000)
+      }
+    )
+  }
+
+  const handleRelease = () => {
+    return (
+      () => {
+        clearTimeout(timeoutId)
+      }
+    )
+  }
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timeoutId)
+    }
+  }, [timeoutId]);
+
 
   const windowInfo = Taro.getWindowInfo()
 
@@ -75,15 +104,16 @@ const HistoryConversation = () => {
       flexDirection: 'row',
       justifyContent: 'space-evenly',
       alignItems: 'center',
-      border: `${index == activeTab ? '#89E5D2' : '#282C34'} solid 1px`,
+      border: `${index === activeTab ? '#89E5D2' : '#282C34'} solid 1px`,
       height: "40px",
       borderRadius: '10px',
-      backgroundColor: index == activeTab ? '#282C34' : '#89E5D2',
+      backgroundColor: index === activeTab ? '#282C34' : '#89E5D2',
       fontWeight: "550",
-      color: index == activeTab ? '#89E5D2' : '#282C34',
+      color: index === activeTab ? '#89E5D2' : '#282C34',
       width: '70px',
     })
   }
+
 
   return (
     <View
@@ -106,14 +136,26 @@ const HistoryConversation = () => {
                 title={
                   <View
                     style={getStyle1(index)}
+                    onTouchStart={
+                      handleTouchStart(item.id)
+                    }
+                    onTouchEnd={
+                      handleRelease()
+                    }
+                    onTouchCancel={
+                      handleRelease()
+                    }
                   >
                     {item.title}
-                    <CircleClose
-                      name='circle-close'
-                      color={index === activeTab ? '#89E5D2' : '#282C34'}
-                      size='12px'
-                      onClick={onTabClose(index)}
-                    />
+                    {
+                      closeIconVisible[item.id] &&
+                      <CircleClose
+                        name='circle-close'
+                        color={index === activeTab ? '#89E5D2' : '#282C34'}
+                        size='12px'
+                        onClick={onTabClose(index)}
+                      />
+                    }
                   </View>
                 }
               >
