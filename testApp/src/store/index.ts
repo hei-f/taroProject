@@ -7,7 +7,7 @@ class Store {
   }
 
   //key相关
-  openApiKey = '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'
+  openApiKey = ''
   setOpenApiKey = (key: string) => {
     this.openApiKey = key;
   }
