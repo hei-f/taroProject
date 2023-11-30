@@ -37,8 +37,8 @@ const Footer = () => {
         text: 'gpt-3.5-turbo'
       },
       {
-        value: 'gpt-4.0-turbo',
-        text: 'gpt-4.0-turbo'
+        value: 'gpt-4',
+        text: 'gpt-4'
       }
     ]
   ]
@@ -117,6 +117,17 @@ const Footer = () => {
     })
   }
 
+  const getModelName = (value: string) => {
+    switch (value) {
+      case 'gpt-3.5-turbo':
+        return 'GPT-3.5'
+      case 'gpt-4':
+        return 'GPT-4'
+      default:
+        return 'GPT-3.5'
+    }
+  }
+
   return (
 
     <View className='footer'>
@@ -155,7 +166,7 @@ const Footer = () => {
             width: '42px',
           }}
         >
-          {model.slice(0, -6)}
+          {getModelName(model)}
         </View>
       </Button>
       <Picker
