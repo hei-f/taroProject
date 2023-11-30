@@ -18,4 +18,6 @@ pnpm dev:weapp
 前往微信开发者工具查看项目。
 
 ## 微信端使用
-使用微信扫描目录下的 "chat-app体验二维码"。
+使用微信扫描目录下的 "chat-app体验二维码"：
+<br>
+<img src="./chat-app体验二维码.jpg" alt="chat-app体验二维码" width="150" height="150">
