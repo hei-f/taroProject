@@ -62,7 +62,35 @@ export type ChatRequest = Request & {
   data: ChatRequestData,
 }
 
-//request响应数据
+//chatRequest响应数据
+export type ChatResponseData = {
+  choices: {
+    finish_reason: string,
+    index: number,
+    message: {
+      content: string,
+      role: string,
+    }
+  }[],
+  created: number,
+  id: string,             //单次对话Id，没有上下文关系
+  model: string,
+  object: "chat.completion" | "chat.completion.chunk",
+  system_fingerprint: string | null, //代表模型运行时使用的后端配置
+  usage: {
+    completion_tokens: number,
+    prompt_tokens: number,
+    total_tokens: number,
+  }
+}
 
+//charRequest响应
+export type ChatResponse = {
+  cookies: string[],
+  data: ChatResponseData,
+  errMsg: string,
+  header: any,
+  statusCode: number,
+}
 
 

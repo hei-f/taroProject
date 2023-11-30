@@ -7,7 +7,7 @@ import {observer} from "mobx-react";
 import {store} from "src/store";
 import {chatRequest} from "src/api";
 import Taro from "@tarojs/taro";
-import {ChatRequestData, Context} from "src/types";
+import {ChatRequestData, ChatResponse, Context} from "src/types";
 import './index.scss'
 
 
@@ -90,7 +90,7 @@ const Footer = () => {
     setInputText('')
 
     //小程序中用不了sse，只能用websocket，但openAi的api不支持websocket
-    chatRequest(requestData, openApiKey).then((res: any) => {
+    chatRequest(requestData, openApiKey).then((res: ChatResponse) => {
       console.log('res=', res)
       let response = res.data.choices[0].message.content
       showResponse(getId, response)

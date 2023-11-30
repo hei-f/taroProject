@@ -39,7 +39,7 @@ class App extends Component <PropsWithChildren> {
         setConversationMap(value.conversationMap)
       }
       if (value.conversationTabs) {
-        console.log(4)
+        // console.log(4)
         setConversationTabs(value.conversationTabs)
       }
     }
@@ -47,7 +47,7 @@ class App extends Component <PropsWithChildren> {
     if (paramsStr) {
       const value = JSON.parse(paramsStr)
       if (value.key) {
-        console.log(5)
+        // console.log(5)
         setOpenApiKey(value.key)
       }
       if (value.system) {
