@@ -1,7 +1,7 @@
 //@ts-ignore
 import send from 'src/assets/images/send_green.png'
 import {View} from "@tarojs/components";
-import {Button, Image, TextArea, Picker} from "@nutui/nutui-react-taro";
+import {Button, Image, TextArea, Picker, Dialog} from "@nutui/nutui-react-taro";
 import {useState} from "react";
 import {observer} from "mobx-react";
 import {store} from "src/store";
@@ -15,6 +15,7 @@ const Footer = () => {
   const [inputText, setInputText] = useState('')
   const [model, setModel] = useState<string>('gpt-3.5-turbo')
   const [modelPickerVisible, setModelPickerVisible] = useState(false)
+  const [noKeyDialogVisible, setNoKeyDialogVisible] = useState(false)
 
   const {
     system,
@@ -49,6 +50,10 @@ const Footer = () => {
 
   const onSubmit = async () => {
     if (!inputText || loading) {
+      return
+    }
+    if (!openApiKey) {
+      setNoKeyDialogVisible(true)
       return
     }
 
@@ -115,6 +120,21 @@ const Footer = () => {
   return (
 
     <View className='footer'>
+      <Dialog
+        title='ApiKey未设置'
+        visible={noKeyDialogVisible}
+        confirmText='前往设置'
+        hideCancelButton
+        content='请先前往User页面设置ApiKey'
+        onConfirm={() => {
+          Taro.switchTab({
+            url: '/pages/user/index',
+            complete: () => {
+              setNoKeyDialogVisible(false)
+            }
+          })
+        }}
+      />
       <Button
         size='small'
         onClick={() => {
