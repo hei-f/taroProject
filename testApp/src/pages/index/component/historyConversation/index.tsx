@@ -178,7 +178,7 @@ const HistoryConversation = () => {
                   scrollTop={0}
                   style={{
                     height: `${windowInfo.windowHeight - 95}px`,
-                    backgroundColor: '#EFE4B0',
+                    backgroundColor: '#FFF3BC',
                     borderRadius: '10px',
                   }}
                   showScrollbar={false}

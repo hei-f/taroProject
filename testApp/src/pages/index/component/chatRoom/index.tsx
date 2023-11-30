@@ -24,6 +24,9 @@ const ChatRoom = (props: {
   return (
     <View
       className='chatRoom'
+      style={{
+        padding: '0 5px'
+      }}
     >
       {
         conversationList && conversationList.map((item, index) => (
