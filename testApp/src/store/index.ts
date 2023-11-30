@@ -94,6 +94,11 @@ class Store {
     this.params = params;
   }
 
+  //是否在加载中
+  loading = false
+  setLoading = (loading: boolean) => {
+    this.loading = loading;
+  }
 
 }
 

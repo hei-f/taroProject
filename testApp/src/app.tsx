@@ -2,26 +2,25 @@ import {Component, PropsWithChildren} from 'react'
 import {observer} from "mobx-react";
 import Taro from "@tarojs/taro";
 import {store} from "src/store";
-import './app.scss'
+
+// import './app.scss'
 
 
 class App extends Component <PropsWithChildren> {
 
   //onLaunch、onLoad、onReady
   componentDidMount() {
-    if (Taro.cloud) {
-      Taro.cloud.init({
-        env: 'ai-test-6gtvaxga12cecc0e'
-      })
-    }
+    // if (Taro.cloud) {
+    //   Taro.cloud.init({
+    //     env: 'ai-test-6gtvaxga12cecc0e'
+    //   })
+    // }
 
 
     //要存在storage中的数据   id根据activeTab判断，不存储
     //key、system 、 conversationMap、conversationTabs、params
     //key、system、params 参数相关数据在设置之后存储
     //conversationMap、conversationTabs 对话相关数据在onUnload中存储
-
-    console.log(1)
     const conversationStr = Taro.getStorageSync('conversationInfo')
     const paramsStr = Taro.getStorageSync('paramsInfo')
 
@@ -34,7 +33,6 @@ class App extends Component <PropsWithChildren> {
     } = store
 
     if (conversationStr) {
-      console.log(2)
 
       const value = JSON.parse(conversationStr)
       if (value.conversationMap) {
@@ -47,7 +45,6 @@ class App extends Component <PropsWithChildren> {
     }
 
     if (paramsStr) {
-      console.log(3)
       const value = JSON.parse(paramsStr)
       if (value.key) {
         console.log(5)
@@ -64,33 +61,33 @@ class App extends Component <PropsWithChildren> {
 
   //TODO:关闭时保存对话数据三种方法 onSaveExitState、onUnload、index的useEffect
   onSaveExitState() {
-    console.log(7)
-    const {
-      conversationMap,
-      conversationTabs
-    } = store
-
-    const conversationInfo = JSON.stringify({
-      conversationMap: conversationMap,
-      conversationTabs: conversationTabs
-    })
-
-    Taro.setStorageSync('conversationInfo', conversationInfo)
+    // console.log(7)
+    // const {
+    //   conversationMap,
+    //   conversationTabs
+    // } = store
+    //
+    // const conversationInfo = JSON.stringify({
+    //   conversationMap: conversationMap,
+    //   conversationTabs: conversationTabs
+    // })
+    //
+    // Taro.setStorageSync('conversationInfo', conversationInfo)
   }
 
   onUnload() {
-    console.log(6)
-    const {
-      conversationMap,
-      conversationTabs
-    } = store
-
-    const conversationInfo = JSON.stringify({
-      conversationMap: conversationMap,
-      conversationTabs: conversationTabs
-    })
-
-    Taro.setStorageSync('conversationInfo', conversationInfo)
+    // console.log(6)
+    // const {
+    //   conversationMap,
+    //   conversationTabs
+    // } = store
+    //
+    // const conversationInfo = JSON.stringify({
+    //   conversationMap: conversationMap,
+    //   conversationTabs: conversationTabs
+    // })
+    //
+    // Taro.setStorageSync('conversationInfo', conversationInfo)
   }
 
   // componentDidShow() {

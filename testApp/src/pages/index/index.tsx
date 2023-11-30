@@ -5,7 +5,7 @@ import {useEffect} from "react";
 import {store} from "src/store";
 import Footer from "src/pages/index/component/footer";
 import HistoryConversation from "src/pages/index/component/historyConversation";
-import './index.scss'
+// import './index.scss'
 
 
 const Index = () => {

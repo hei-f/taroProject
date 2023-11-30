@@ -12,6 +12,10 @@
     border-radius: 10px;
     height: 100%;
     flex-grow: 1;
+    background-color: #282C34;
+    --nutui-textarea-limit-color: #98C379;
+    --nutui-textarea-text-color: #98C379;
+    --nutui-textarea-text-curror-color: #98C379;
 
     .nut-textarea__textarea {
       height: 100%;

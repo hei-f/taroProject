@@ -19,7 +19,8 @@ const HistoryConversation = () => {
     deleteConversation,
     closeIconVisible,
     setCloseIconVisible,
-    clearCloseIconVisible
+    clearCloseIconVisible,
+    conversationMap
   } = store
 
   let timeoutId: string | number | NodeJS.Timeout | undefined;
@@ -30,7 +31,7 @@ const HistoryConversation = () => {
         timeoutId = setTimeout(() => {
           clearCloseIconVisible()
           setCloseIconVisible(id, true)
-        }, 1000)
+        }, 500)
       }
     )
   }
@@ -53,9 +54,7 @@ const HistoryConversation = () => {
   const windowInfo = Taro.getWindowInfo()
 
   const onTabsClick = (item: number) => {
-    if (item !== conversationTabs.length) {
-      setActiveTab(item)
-    } else {
+    if (item === conversationTabs.length) {
       const id = Number(conversationTabs[conversationTabs.length - 1].id) + 1
       setConversationTabs(
         [...conversationTabs,
@@ -66,6 +65,7 @@ const HistoryConversation = () => {
         ]
       )
     }
+    setActiveTab(item)
   }
 
   const onTabClose = (index: number) => {
@@ -96,6 +96,17 @@ const HistoryConversation = () => {
             setActiveTab(index - 1)
           }
         }
+
+        const conversationInfo = JSON.stringify({
+          conversationMap: conversationMap,
+          conversationTabs: conversationTabs
+        })
+
+        Taro.setStorage({
+          key: 'conversationInfo',
+          data: conversationInfo
+        })
+
       }
     )
   }
@@ -166,8 +177,9 @@ const HistoryConversation = () => {
                   scrollWithAnimation
                   scrollTop={0}
                   style={{
-                    height: `${windowInfo.windowHeight - 100}px`,
-                    marginTop: '-25px',
+                    height: `${windowInfo.windowHeight - 95}px`,
+                    backgroundColor: '#EFE4B0',
+                    borderRadius: '10px',
                   }}
                   showScrollbar={false}
                   lowerThreshold={-20}

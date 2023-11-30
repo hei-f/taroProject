@@ -1,12 +1,84 @@
 import {Cell, Image} from "@nutui/nutui-react-taro";
 // @ts-ignore
 import gptIcon from "src/assets/images/gptIcon.png";
-import {View} from "@tarojs/components";
+import React from "react";
+import {View, Text} from "@tarojs/components";
+import './index.scss'
+
 
 const GptContent = (props: {
-  children?: any
+  children?: any,
+  loading?: boolean,
 }) => {
-  const {children} = props
+  const {
+    children,
+  } = props
+
+  const parseString = (input: string): React.JSX.Element[] => {
+    const parts: React.JSX.Element[] = [];
+
+    const codeRegex = /```([a-zA-Z]+)\r?\n([\s\S]*?)```/g;
+
+    let match: RegExpExecArray | null;
+    let lastIndex = 0;
+
+    while ((match = codeRegex.exec(input)) !== null) {
+      const languageIdentifier = match[1];//表示语言类型
+      const codeBlock = match[2];
+
+      const nonCodePart = input.substring(lastIndex, match.index);
+      lastIndex = codeRegex.lastIndex;
+
+      if (nonCodePart.length > 0) {
+        parts.push(
+          <View
+            key={parts.length}
+          >
+            {/*如果是直接在View里传字符串，换行会被吃掉*/}
+            {/*只有在Text里才会保留换行*/}
+            <Text>
+              {nonCodePart}
+            </Text>
+          </View>
+        );
+      }
+
+      parts.push(
+        <View key={parts.length} className='code'>
+          <View style={{
+            textAlign: 'start'
+          }}
+          >
+            <Text>
+              {`//${languageIdentifier}`}
+            </Text>
+          </View>
+
+          <Text>
+            {codeBlock}
+          </Text>
+        </View>
+      );
+    }
+
+    const remainingText = input.substring(lastIndex);
+
+    if (remainingText.length > 0) {
+      parts.push(
+        <View
+          key={parts.length}
+        >
+          <Text>
+            {remainingText}
+          </Text>
+        </View>);
+    }
+
+    return parts;
+  };
+
+  const parsedElements = parseString(children);
+
   return (
     <Cell
       style={{
@@ -38,7 +110,20 @@ const GptContent = (props: {
         <View
           className='gpt-content'
         >
-          {children}
+          {
+            parsedElements.map((element, index) => {
+              return (
+                //使用<></>会报红 React.Fragment不会
+                <React.Fragment
+                  key={index}
+                >
+                  {
+                    element
+                  }
+                </React.Fragment>
+              )
+            })
+          }
         </View>
       </View>
     </Cell>

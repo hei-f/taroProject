@@ -6,6 +6,7 @@ import {useState} from "react";
 import {observer} from "mobx-react";
 import {store} from "src/store";
 import {chatRequest} from "src/api";
+import Taro from "@tarojs/taro";
 import {ChatRequestData, Context} from "src/types";
 import './index.scss'
 
@@ -20,12 +21,12 @@ const Footer = () => {
     getConversation,
     openApiKey,
     addConversation,
-    // conversationMap,
     showResponse,
-    // setConversation,
-    // conversationTabs,
-    // activeTab
     getId,
+    conversationMap,
+    conversationTabs,
+    loading,
+    setLoading
   } = store
 
   const models = [
@@ -47,9 +48,10 @@ const Footer = () => {
   }
 
   const onSubmit = async () => {
-    if (!inputText) {
+    if (!inputText || loading) {
       return
     }
+
     const conversation = getConversation(getId)
     const context: Context[] = []
 
@@ -83,17 +85,31 @@ const Footer = () => {
       prompt: inputText,
       response: 'loading...',
     })
+    setLoading(true)
 
     setInputText('')
+
+    //小程序中用不了sse，只能用websocket，但openAi的api不支持websocket
     chatRequest(requestData, openApiKey).then((res: any) => {
       console.log('res=', res)
       let response = res.data.choices[0].message.content
       showResponse(getId, response)
+
+      const conversationInfo = JSON.stringify({
+        conversationMap: conversationMap,
+        conversationTabs: conversationTabs
+      })
+
+      Taro.setStorage({
+        key: 'conversationInfo',
+        data: conversationInfo
+      })
+      setLoading(false)
     }).catch((err: any) => {
+      setLoading(false)
 
       console.log('err=', err)
     })
-
   }
 
   return (
@@ -133,13 +149,16 @@ const Footer = () => {
       />
 
       <TextArea
-        placeholder='输入对话内容'
+        placeholder=' '
         onChange={onInput}
         onConfirm={onSubmit}
         value={inputText}
         maxLength={2000}
         showCount
         confirmType='send'
+        style={{
+          width: '160px'
+        }}
       />
 
       <Button

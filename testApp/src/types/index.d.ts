@@ -41,6 +41,7 @@ export type CloseIconVisible = {
 export type ChatRequestData = {
   model: string,
   messages: Context[],
+  stream?: boolean,
 }
 
 //request header参数

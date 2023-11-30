@@ -3,6 +3,7 @@ import UserContent from "src/component/userContent";
 import {observer} from "mobx-react";
 import GptContent from "src/component/gptContent";
 import {store} from "src/store";
+import GptContentLoading from "src/component/gptContent/loading";
 
 
 const ChatRoom = (props: {
@@ -14,36 +15,43 @@ const ChatRoom = (props: {
   } = props
 
   const {
-    conversationMap
+    conversationMap,
+    loading
   } = store
 
   const conversationList = conversationMap[id] || []
 
   return (
-    <View>
+    <View
+      className='chatRoom'
+    >
       {
         conversationList && conversationList.map((item, index) => (
           <View
             key={index}
           >
-            <View >
-              <UserContent>
-                {
-                  item.prompt
-                }
-              </UserContent>
-            </View>
+            <UserContent>
+              {
+                item.prompt
+              }
+            </UserContent>
 
             <View
               style={{
                 paddingBottom: '0.5px',
               }}
             >
-              <GptContent>
-                {
-                  item.response
-                }
-              </GptContent>
+              {
+                (loading && index === conversationList.length - 1) ? (
+                  <GptContentLoading />
+                ) : (
+                  <GptContent>
+                    {
+                      item.response
+                    }
+                  </GptContent>
+                )
+              }
             </View>
 
           </View>

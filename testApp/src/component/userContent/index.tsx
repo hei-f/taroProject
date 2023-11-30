@@ -1,4 +1,4 @@
-import {View} from "@tarojs/components";
+import {View, Text} from "@tarojs/components";
 import {Cell} from "@nutui/nutui-react-taro";
 
 
@@ -24,7 +24,9 @@ const UserContent = (props: {
           color: '#E5C17C',
         }}
       >
-        {children}
+        <Text>
+          {children}
+        </Text>
       </View>
     </Cell>)
 }
