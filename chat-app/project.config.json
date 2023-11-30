@@ -1,6 +1,6 @@
 {
     "miniprogramRoot": "dist/",
-    "projectname": "testApp",
+    "projectname": "chat-app",
     "description": "",
     "appid": "wx9ea34b578286ccc7",
     "setting": {
