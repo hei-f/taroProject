@@ -20,7 +20,8 @@ const HistoryConversation = () => {
     closeIconVisible,
     setCloseIconVisible,
     clearCloseIconVisible,
-    conversationMap
+    conversationMap,
+    env
   } = store
 
   let timeoutId: string | number | NodeJS.Timeout | undefined;
@@ -127,7 +128,6 @@ const HistoryConversation = () => {
     })
   }
 
-
   return (
     <View
       className='historyConversation'
@@ -177,7 +177,7 @@ const HistoryConversation = () => {
                   scrollWithAnimation
                   scrollTop={0}
                   style={{
-                    height: `${windowInfo.windowHeight - 95}px`,
+                    height: `${windowInfo.windowHeight - (env === 'WEB' ? 100 : 95)}px`,
                     backgroundColor: '#FFF3BC',
                     borderRadius: '10px',
                   }}

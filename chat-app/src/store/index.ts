@@ -6,6 +6,12 @@ class Store {
     makeAutoObservable(this);
   }
 
+  //环境相关
+  env = 'WEAPP'
+  setEnv = (env: string) => {
+    this.env = env;
+  }
+
   //key相关
   openApiKey = ''
   setOpenApiKey = (key: string) => {

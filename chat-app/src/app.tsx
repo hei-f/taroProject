@@ -23,14 +23,17 @@ class App extends Component <PropsWithChildren> {
     //conversationMap、conversationTabs 对话相关数据在onUnload中存储
     const conversationStr = Taro.getStorageSync('conversationInfo')
     const paramsStr = Taro.getStorageSync('paramsInfo')
+    const envType = Taro.getEnv()
 
     const {
       setOpenApiKey,
       setSystem,
       setConversationMap,
       setConversationTabs,
-      setParams
+      setParams,
+      setEnv
     } = store
+    setEnv(envType)
 
     if (conversationStr) {
 

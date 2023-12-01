@@ -2,7 +2,7 @@
 import send from 'src/assets/images/send_green.png'
 import {View} from "@tarojs/components";
 import {Button, Image, TextArea, Picker, Dialog} from "@nutui/nutui-react-taro";
-import {useState} from "react";
+import {CSSProperties, useState} from "react";
 import {observer} from "mobx-react";
 import {store} from "src/store";
 import {chatRequest} from "src/api";
@@ -27,7 +27,8 @@ const Footer = () => {
     conversationMap,
     conversationTabs,
     loading,
-    setLoading
+    setLoading,
+    env
   } = store
 
   const models = [
@@ -111,9 +112,15 @@ const Footer = () => {
       })
       setLoading(false)
     }).catch((err: any) => {
+      try {
+        showResponse(getId, JSON.stringify(err))
+      } catch {
+        showResponse(getId, '请求出错')
+        console.log('err=', err)
+      }
+
       setLoading(false)
 
-      console.log('err=', err)
     })
   }
 
@@ -128,9 +135,41 @@ const Footer = () => {
     }
   }
 
+  const getFootStyle = (): CSSProperties => {
+    if (env === 'WEB') {
+      return {
+        position: 'fixed',
+        bottom: '50px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        height: '45px',
+      }
+    } else {
+      return {}
+    }
+  }
+
+  const getTextAreaStyle = (): CSSProperties => {
+    if (env === 'WEB') {
+      return ({
+        width: '160px',
+        color: '#98C379',
+      })
+    } else {
+      return ({
+        width: '160px',
+      })
+    }
+  }
+
   return (
 
-    <View className='footer'>
+    <View
+      className='footer'
+      style={getFootStyle()}
+    >
       <Dialog
         title='ApiKey未设置'
         visible={noKeyDialogVisible}
@@ -187,9 +226,7 @@ const Footer = () => {
         maxLength={2000}
         showCount
         confirmType='send'
-        style={{
-          width: '160px'
-        }}
+        style={getTextAreaStyle()}
       />
 
       <Button
