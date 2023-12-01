@@ -99,6 +99,7 @@ const Footer = () => {
     let resContent = ''
 
     if (env === 'WEB') {
+      // @ts-ignore
       const fetchStream = new FetchStream({
         url: 'https://api.openai.com/v1/chat/completions',
         requestInit: {
@@ -108,27 +109,38 @@ const Footer = () => {
             'Content-Type': 'application/json',
           },
         },
-        onmessage: (responses: string[], _index: number) => {
+        onMessage: (responses: string[], _index: number) => {
+          // console.log('responses=', responses)
           for (let response of responses) {
             let temp = response.slice(6)
             // console.log('temp=', temp)
+
             if (temp === '[DONE]') {
               break
             }
 
             let res = JSON.parse(temp)
+            // console.log('res=', res)
             let plusContent = res.choices[0].delta.content
+
+            //TODO:如果finish_reason是length，提示用户输出太长，需要输入继续
+            // if (res.choices[0].finish_reason === 'stop') {
+            //
+            //   fetchStream.abort()
+            //   console.log('abort')
+            // }
+
 
             if (plusContent !== undefined) {
               console.log('plusContent=', plusContent)
               resContent += plusContent
             }
           }
-          console.log('resContent=', resContent)
+          // console.log('resContent=', resContent)
           showResponse(getId, resContent)
           setLoading(false)
         },
-        ondone: () => {
+        onDone: () => {
           const conversationInfo = JSON.stringify({
             conversationMap: conversationMap,
             conversationTabs: conversationTabs
@@ -139,10 +151,10 @@ const Footer = () => {
             data: conversationInfo
           })
         },
-        ontimeout: () => {
+        onTimeout: () => {
           console.log('timeout')
         },
-        onerror: (err: any) => {
+        onError: (err: any) => {
           console.log('err=', err)
           // showResponse(getId, JSON.stringify(err))
         }

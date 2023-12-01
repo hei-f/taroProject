@@ -1,5 +1,5 @@
 import Taro from "@tarojs/taro";
-import {ChatRequestData} from "../types";
+import {ChatRequestData, FetchStreamOptions} from "../types";
 
 //chat请求
 export const chatRequest = (data: ChatRequestData, openApiKey: string) => {
@@ -14,25 +14,28 @@ export const chatRequest = (data: ChatRequestData, openApiKey: string) => {
   })
 }
 
+//处理stream
 export class FetchStream {
   url: string;
   requestInit: RequestInit;
-  onmessage: (data: string[], index: number) => void;
-  ondone: () => void;
-  onerror: (response: Response) => void;
-  ontimeout?: () => void;
-
-  constructor(options: any) {
-    this.url = options.url;
-    this.requestInit = options.requestInit;
-    this.onmessage = options.onmessage;
-    this.ondone = options.ondone;
-    this.onerror = options.onerror;
-    this.createFetchRequest();
-  }
-
+  onMessage: (data: string[], index: number) => void;
+  onDone?: () => void;
+  onError?: (response: Response) => void;
+  onTimeout?: () => void;
   controller: AbortController | null = null;
   timer: number = 0;
+  time: number;
+
+  constructor(options: FetchStreamOptions) {
+    this.url = options.url;
+    this.requestInit = options.requestInit;
+    this.onMessage = options.onMessage;
+    this.onDone = options.onDone;
+    this.onError = options.onError;
+    this.createFetchRequest();
+    this.onTimeout = options.onTimeout;
+    this.time = options.time || 60000;
+  }
 
   createFetchRequest() {
     this.controller = new AbortController();
@@ -71,7 +74,7 @@ export class FetchStream {
         if (done) { // 响应流处理完成
 
           // 5. 流已关闭，执行外部结束逻辑
-          this.ondone?.();
+          this.onDone?.();
           break;
 
         } else {
@@ -80,12 +83,12 @@ export class FetchStream {
           const dataText = new TextDecoder().decode(value);
           const data = dataText.split('\n\n').filter(Boolean) as string[];
           // response 响应的消息可能存在多个，以 \n\n 分割
-          this.onmessage(data, index++);
+          this.onMessage(data, index++);
         }
       }
     }).catch(response => {
       // ... error 处理
-      this.onerror?.(response);
+      this.onError?.(response);
     });
   }
 
@@ -93,11 +96,11 @@ export class FetchStream {
     if (this.controller) this.controller.abort();
   }
 
-  timeout(time: number = 60000) {
+  timeout() {
     this.timer = window.setTimeout(() => {
       this.abort();
-      this.ontimeout?.(); // 外部若传入了监听超时回调，类似 onmessage
-    }, time);
+      this.onTimeout?.(); // 外部若传入了监听超时回调，类似 onMessage
+    }, this.time);
   }
 }
 

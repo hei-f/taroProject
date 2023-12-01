@@ -93,4 +93,14 @@ export type ChatResponse = {
   statusCode: number,
 }
 
+// fetchStream参数
+export type FetchStreamOptions = {
+  url: string,
+  requestInit: RequestInit,
+  onMessage: (data: string[], index: number) => void,
+  onDone?: () => void,
+  onError?: (response: Response) => void,
+  onTimeout?: () => void,
+  time?: number,
+}
 
