@@ -2,7 +2,7 @@ import {Cell, Image} from "@nutui/nutui-react-taro";
 // @ts-ignore
 import gptIcon from "src/assets/images/gptIcon.png";
 import React from "react";
-import {View, Text} from "@tarojs/components";
+import {View} from "@tarojs/components";
 import './index.scss'
 
 
@@ -29,34 +29,47 @@ const GptContent = (props: {
       const nonCodePart = input.substring(lastIndex, match.index);
       lastIndex = codeRegex.lastIndex;
 
+
       if (nonCodePart.length > 0) {
         parts.push(
           <View
             key={parts.length}
+            style={{
+              whiteSpace: 'pre-wrap',
+              //white-space属性来处理换行
+              //normal：
+              // 连续的空白符会被合并。源码中的换行符会被当作空白符来处理。
+              // 并根据填充行框盒子的需要来换行。
+
+              //nowrap
+              //和 normal 一样合并空白符，但阻止源码中的文本换行
+
+              //pre
+              //连续的空白符会被保留。仅在遇到换行符或 <br> 元素时才会换行
+
+              // pre-wrap：
+              // 连续的空白符会被保留。在遇到换行符、<br>元素，
+              // 或者需要根据width属性进行换行时才会换行
+
+              //pre-line：
+              //连续的空白符会被合并。在遇到换行符或 <br> 元素时，或者根据填充行框盒子的需要换行。
+            }}
           >
-            {/*如果是直接在View里传字符串，换行会被吃掉*/}
-            {/*只有在Text里才会保留换行*/}
-            <Text>
-              {nonCodePart}
-            </Text>
+            {nonCodePart}
           </View>
         );
       }
 
       parts.push(
-        <View key={parts.length} className='code'>
-          <View style={{
-            textAlign: 'start'
+        <View
+          key={parts.length}
+          className='code'
+          style={{
+            whiteSpace: 'pre-wrap',
           }}
-          >
-            <Text>
-              {`//${languageIdentifier}`}
-            </Text>
-          </View>
-
-          <Text>
-            {codeBlock}
-          </Text>
+        >
+          {`//${languageIdentifier} \n\n`}
+          {codeBlock}
         </View>
       );
     }
@@ -67,11 +80,15 @@ const GptContent = (props: {
       parts.push(
         <View
           key={parts.length}
+          style={{
+            whiteSpace: 'pre-wrap',
+          }}
         >
-          <Text>
-            {remainingText}
-          </Text>
-        </View>);
+          {
+            remainingText
+          }
+        </View>
+      );
     }
 
     return parts;

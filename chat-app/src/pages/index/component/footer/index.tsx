@@ -5,7 +5,7 @@ import {Button, Image, TextArea, Picker, Dialog} from "@nutui/nutui-react-taro";
 import {CSSProperties, useState} from "react";
 import {observer} from "mobx-react";
 import {store} from "src/store";
-import {chatRequest} from "src/api";
+import {chatRequest, FetchStream} from "src/api";
 import Taro from "@tarojs/taro";
 import {ChatRequestData, ChatResponse, Context} from "src/types";
 import './index.scss'
@@ -85,43 +85,101 @@ const Footer = () => {
           content: inputText,
         }
       ],
+      stream: env === 'WEB' //小程序中不能使用sse
     }
 
     addConversation(getId, {
       prompt: inputText,
       response: 'loading...',
     })
+    setInputText('')
     setLoading(true)
 
-    setInputText('')
 
-    //小程序中用不了sse，只能用websocket，但openAi的api不支持websocket
-    chatRequest(requestData, openApiKey).then((res: ChatResponse) => {
-      console.log('res=', res)
-      let response = res.data.choices[0].message.content
-      showResponse(getId, response)
+    let resContent = ''
 
-      const conversationInfo = JSON.stringify({
-        conversationMap: conversationMap,
-        conversationTabs: conversationTabs
+    if (env === 'WEB') {
+      const fetchStream = new FetchStream({
+        url: 'https://api.openai.com/v1/chat/completions',
+        requestInit: {
+          body: JSON.stringify(requestData),
+          headers: {
+            'Authorization': `Bearer ${openApiKey}`,
+            'Content-Type': 'application/json',
+          },
+        },
+        onmessage: (responses: string[], _index: number) => {
+          for (let response of responses) {
+            let temp = response.slice(6)
+            // console.log('temp=', temp)
+            if (temp === '[DONE]') {
+              break
+            }
+
+            let res = JSON.parse(temp)
+            let plusContent = res.choices[0].delta.content
+
+            if (plusContent !== undefined) {
+              console.log('plusContent=', plusContent)
+              resContent += plusContent
+            }
+          }
+          console.log('resContent=', resContent)
+          showResponse(getId, resContent)
+          setLoading(false)
+        },
+        ondone: () => {
+          const conversationInfo = JSON.stringify({
+            conversationMap: conversationMap,
+            conversationTabs: conversationTabs
+          })
+
+          Taro.setStorage({
+            key: 'conversationInfo',
+            data: conversationInfo
+          })
+        },
+        ontimeout: () => {
+          console.log('timeout')
+        },
+        onerror: (err: any) => {
+          console.log('err=', err)
+          // showResponse(getId, JSON.stringify(err))
+        }
       })
 
-      Taro.setStorage({
-        key: 'conversationInfo',
-        data: conversationInfo
+
+    } else {
+      //小程序中用不了sse，只能用websocket，但openAi的api不支持websocket
+      chatRequest(requestData, openApiKey).then((res: ChatResponse) => {
+        console.log('res=', res)
+        let response = res.data.choices[0].message.content
+        showResponse(getId, response)
+
+        const conversationInfo = JSON.stringify({
+          conversationMap: conversationMap,
+          conversationTabs: conversationTabs
+        })
+
+        Taro.setStorage({
+          key: 'conversationInfo',
+          data: conversationInfo
+        })
+        setLoading(false)
+      }).catch((err: any) => {
+        try {
+          showResponse(getId, JSON.stringify(err))
+        } catch {
+          showResponse(getId, '请求出错')
+          console.log('err=', err)
+        }
+
+        setLoading(false)
+
       })
-      setLoading(false)
-    }).catch((err: any) => {
-      try {
-        showResponse(getId, JSON.stringify(err))
-      } catch {
-        showResponse(getId, '请求出错')
-        console.log('err=', err)
-      }
 
-      setLoading(false)
+    }
 
-    })
   }
 
   const getModelName = (value: string) => {
