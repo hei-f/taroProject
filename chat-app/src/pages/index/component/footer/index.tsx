@@ -99,7 +99,7 @@ const Footer = () => {
     let resContent = ''
 
     if (env === 'WEB') {
-      // @ts-ignore
+      //创建一个fetchStream实例，用于发送请求
       const fetchStream = new FetchStream({
         url: 'https://api.openai.com/v1/chat/completions',
         requestInit: {
@@ -130,13 +130,12 @@ const Footer = () => {
             //   console.log('abort')
             // }
 
-
             if (plusContent !== undefined) {
               console.log('plusContent=', plusContent)
               resContent += plusContent
             }
           }
-          // console.log('resContent=', resContent)
+
           showResponse(getId, resContent)
           setLoading(false)
         },
@@ -159,6 +158,9 @@ const Footer = () => {
           // showResponse(getId, JSON.stringify(err))
         }
       })
+
+      //调用createFetchRequest方法，发送请求
+      fetchStream.createFetchRequest()
 
 
     } else {

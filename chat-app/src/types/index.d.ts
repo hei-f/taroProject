@@ -32,11 +32,6 @@ export type ParamsDialogValue = {
   presence_penalty?: string,
 }
 
-//关闭icon是否可见
-export type CloseIconVisible = {
-  [key: string]: boolean,
-}
-
 //chatRequestData参数
 export type ChatRequestData = {
   model: string,

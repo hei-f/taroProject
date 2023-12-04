@@ -1,7 +1,7 @@
 const path = require('path')
 
 const config = {
-  projectName: "testApp",
+  projectName: "chat-App",
   date: "2023-11-23",
   designWidth(input) {
     // 配置 NutUI 375 尺寸

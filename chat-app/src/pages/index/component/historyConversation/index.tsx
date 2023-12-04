@@ -1,7 +1,7 @@
-import {CSSProperties, useEffect, useRef, useState} from "react";
+import {CSSProperties, useRef, useState} from "react";
 import {observer} from "mobx-react";
-import {Tabs, TabPane} from '@nutui/nutui-react-taro';
-import {Plus, CircleClose} from '@nutui/icons-react-taro'
+import {Tabs, TabPane, Dialog} from '@nutui/nutui-react-taro';
+import {Plus} from '@nutui/icons-react-taro'
 import {ScrollView, View} from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import {store} from "src/store";
@@ -17,54 +17,32 @@ const HistoryConversation = () => {
     activeTab,
     setActiveTab,
     deleteConversation,
-    closeIconVisible,
-    setCloseIconVisible,
-    clearCloseIconVisible,
     conversationMap,
     env
   } = store
 
-  const [lastTime, setLastTime] = useState<number>(0)
-  const timeId = useRef<NodeJS.Timeout>()
+  const longPressFlag = useRef<boolean>(false)
+  const [deleteDialogVisible, setDeleteDialogVisible] = useState<boolean>(false)
+  const [deleteIndex, setDeleteIndex] = useState<number>(0)
 
-  ////web端模拟移动设备的时候mouseDown和mouseUp不会触发，pc端才会；
-  // 所以同时设置了onLongPress(onTouchStart、onTouchEnd)和onMouseDown、onMouseUp
-  const handleTouchStart = (id: string) => {
-    //长按在start中触发
+  const onLongPress = (index: number) => {
     return (
       () => {
-        setLastTime(new Date().getTime())
-        timeId.current = setTimeout(() => {
-          clearCloseIconVisible()
-          setCloseIconVisible(id, true)
-        }, 400)
+        setDeleteIndex(index)
+        longPressFlag.current = true
+        setDeleteDialogVisible(true)
       }
     )
   }
 
-  const handleRelease = (index: number) => {
-    //短按在end中触发
-    return (
-      () => {
-        clearTimeout(timeId.current)
-        if (new Date().getTime() - lastTime < 400) {
-          onTabsClick(index)
-        }
-      }
-    )
-  }
-
-  useEffect(() => {
-    return (
-      () => {
-        clearTimeout(timeId.current)
-      }
-    )
-  }, []);
 
   const windowInfo = Taro.getWindowInfo()
 
   const onTabsClick = (item: number) => {
+    if (longPressFlag.current) {
+      longPressFlag.current = false
+      return
+    }
     if (item === conversationTabs.length) {
       const id = Number(conversationTabs[conversationTabs.length - 1].id) + 1
       setConversationTabs(
@@ -80,46 +58,40 @@ const HistoryConversation = () => {
   }
 
   const onTabClose = (index: number) => {
-    return (
-      (event: MouseEvent) => {
-        event.stopPropagation() //阻止冒泡，不然会切换activeTab
 
-        if (conversationTabs.length === 1) {
-          setConversationTabs([
-            {
-              title: '对话1',
-              id: '1',
-            },
-          ])
-          setActiveTab(0)
-          deleteConversation()
-          clearCloseIconVisible()
-        } else {
+    if (conversationTabs.length === 1) {
+      setConversationTabs([
+        {
+          title: '对话1',
+          id: '1',
+        },
+      ])
+      setActiveTab(0)
+      deleteConversation()
+    } else {
 
-          deleteConversation(conversationTabs[index].id)
-          setCloseIconVisible(conversationTabs[index].id, false)
+      deleteConversation(conversationTabs[index].id)
 
-          setConversationTabs(
-            conversationTabs.filter((_, i) => i !== index)
-          )
+      setConversationTabs(
+        conversationTabs.filter((_, i) => i !== index)
+      )
 
-          if (index === activeTab && index !== 0) {
-            setActiveTab(index - 1)
-          }
-        }
-
-        const conversationInfo = JSON.stringify({
-          conversationMap: conversationMap,
-          conversationTabs: conversationTabs
-        })
-
-        Taro.setStorage({
-          key: 'conversationInfo',
-          data: conversationInfo
-        })
-
+      if (index === activeTab && index !== 0) {
+        console.log('index=', index)
+        setActiveTab(index - 1)
       }
-    )
+    }
+
+    const conversationInfo = JSON.stringify({
+      conversationMap: conversationMap,
+      conversationTabs: conversationTabs
+    })
+
+    Taro.setStorage({
+      key: 'conversationInfo',
+      data: conversationInfo
+    })
+
   }
 
   const getStyle1 = (index: number): CSSProperties => {
@@ -142,6 +114,20 @@ const HistoryConversation = () => {
     <View
       className='historyConversation'
     >
+      <Dialog
+        title='提示'
+        content='确定要删除该对话吗？'
+        visible={deleteDialogVisible}
+        onCancel={() => {
+          setDeleteDialogVisible(false)
+        }}
+        onConfirm={() => {
+          console.log('deleteIndex=', deleteIndex)
+          onTabClose(deleteIndex)
+          setDeleteDialogVisible(false)
+        }}
+        closeOnOverlayClick={false}
+      />
       <Tabs
         className='historyConversationTabs'
         value={activeTab}
@@ -159,27 +145,25 @@ const HistoryConversation = () => {
                 title={
                   <View
                     style={getStyle1(index)}
-                    onTouchStart={handleTouchStart(item.id)}
-                    onTouchEnd={handleRelease(index)}
-                    onTouchCancel={handleRelease(index)}
-                    //@ts-ignore
-                    onMouseDown={handleTouchStart(item.id)}
-                    onMouseUp={handleRelease(index)}
-                    onClick={(e) => {
-                      //如果不阻止冒泡，那么View的长按会触发Tabs的点击事件
-                      e.stopPropagation()
-                    }}
+                    onLongPress={onLongPress(index)}
+                    // onTouchStart={handleTouchStart}
+                    // onTouchEnd={handleRelease(index)}
+                    // onTouchCancel={handleRelease(index)}
+                    // onTouchMove={() => {
+                    //   touchMoveFlag.current = false
+                    // }}
+
                   >
                     {item.title}
-                    {
-                      closeIconVisible[item.id] &&
-                      <CircleClose
-                        name='circle-close'
-                        color={index === activeTab ? '#89E5D2' : '#282C34'}
-                        size='12px'
-                        onClick={onTabClose(index)}
-                      />
-                    }
+                    {/*{*/}
+                    {/*  closeIconVisible[item.id] &&*/}
+                    {/*  <CircleClose*/}
+                    {/*    name='circle-close'*/}
+                    {/*    color={index === activeTab ? '#89E5D2' : '#282C34'}*/}
+                    {/*    size='12px'*/}
+                    {/*    onClick={onTabClose(index)}*/}
+                    {/*  />*/}
+                    {/*}*/}
                   </View>
                 }
               >

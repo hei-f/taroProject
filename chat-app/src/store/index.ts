@@ -1,5 +1,5 @@
 import {makeAutoObservable} from "mobx";
-import {CloseIconVisible, Conversation, ConversationMap, ConversationTab, Params} from "src/types";
+import {Conversation, ConversationMap, ConversationTab, Params} from "src/types";
 
 class Store {
   constructor() {
@@ -83,15 +83,6 @@ class Store {
     } else {
       return '1'
     }
-  }
-
-  //tab的closeIcon相关
-  closeIconVisible: CloseIconVisible = {}
-  setCloseIconVisible = (id: string, visible: boolean) => {
-    this.closeIconVisible[id] = visible;
-  }
-  clearCloseIconVisible = () => {
-    this.closeIconVisible = {}
   }
 
   //可选参数相关
