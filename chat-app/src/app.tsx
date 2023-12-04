@@ -8,7 +8,6 @@ import {store} from "src/store";
 
 class App extends Component <PropsWithChildren> {
 
-  //onLaunch、onLoad、onReady
   componentDidMount() {
     // if (Taro.cloud) {
     //   Taro.cloud.init({
@@ -20,7 +19,7 @@ class App extends Component <PropsWithChildren> {
     //要存在storage中的数据   id根据activeTab判断，不存储
     //key、system 、 conversationMap、conversationTabs、params
     //key、system、params 参数相关数据在设置之后存储
-    //conversationMap、conversationTabs 对话相关数据在onUnload中存储
+    //conversationMap、conversationTabs 对话相关数据在对话后存储
     const conversationStr = Taro.getStorageSync('conversationInfo')
     const paramsStr = Taro.getStorageSync('paramsInfo')
     const envType = Taro.getEnv()
@@ -62,36 +61,11 @@ class App extends Component <PropsWithChildren> {
     }
   }
 
-  //TODO:关闭时保存对话数据三种方法 onSaveExitState、onUnload、index的useEffect
-  onSaveExitState() {
-    // console.log(7)
-    // const {
-    //   conversationMap,
-    //   conversationTabs
-    // } = store
-    //
-    // const conversationInfo = JSON.stringify({
-    //   conversationMap: conversationMap,
-    //   conversationTabs: conversationTabs
-    // })
-    //
-    // Taro.setStorageSync('conversationInfo', conversationInfo)
-  }
+  // onSaveExitState() {
+  // }
 
-  onUnload() {
-    // console.log(6)
-    // const {
-    //   conversationMap,
-    //   conversationTabs
-    // } = store
-    //
-    // const conversationInfo = JSON.stringify({
-    //   conversationMap: conversationMap,
-    //   conversationTabs: conversationTabs
-    // })
-    //
-    // Taro.setStorageSync('conversationInfo', conversationInfo)
-  }
+  // onUnload() {
+  // }
 
   // componentDidShow() {
   // }

@@ -1,4 +1,4 @@
-import {CSSProperties, useEffect} from "react";
+import {CSSProperties, useEffect, useRef, useState} from "react";
 import {observer} from "mobx-react";
 import {Tabs, TabPane} from '@nutui/nutui-react-taro';
 import {Plus, CircleClose} from '@nutui/icons-react-taro'
@@ -24,33 +24,43 @@ const HistoryConversation = () => {
     env
   } = store
 
-  let timeoutId: string | number | NodeJS.Timeout | undefined;
+  const [lastTime, setLastTime] = useState<number>(0)
+  const timeId = useRef<NodeJS.Timeout>()
 
+  ////web端模拟移动设备的时候mouseDown和mouseUp不会触发，pc端才会；
+  // 所以同时设置了onLongPress(onTouchStart、onTouchEnd)和onMouseDown、onMouseUp
   const handleTouchStart = (id: string) => {
+    //长按在start中触发
     return (
       () => {
-        timeoutId = setTimeout(() => {
+        setLastTime(new Date().getTime())
+        timeId.current = setTimeout(() => {
           clearCloseIconVisible()
           setCloseIconVisible(id, true)
-        }, 500)
+        }, 400)
       }
     )
   }
 
-  const handleRelease = () => {
+  const handleRelease = (index: number) => {
+    //短按在end中触发
     return (
       () => {
-        clearTimeout(timeoutId)
+        clearTimeout(timeId.current)
+        if (new Date().getTime() - lastTime < 400) {
+          onTabsClick(index)
+        }
       }
     )
   }
 
   useEffect(() => {
-    return () => {
-      clearTimeout(timeoutId)
-    }
-  }, [timeoutId]);
-
+    return (
+      () => {
+        clearTimeout(timeId.current)
+      }
+    )
+  }, []);
 
   const windowInfo = Taro.getWindowInfo()
 
@@ -149,15 +159,16 @@ const HistoryConversation = () => {
                 title={
                   <View
                     style={getStyle1(index)}
-                    onTouchStart={
-                      handleTouchStart(item.id)
-                    }
-                    onTouchEnd={
-                      handleRelease()
-                    }
-                    onTouchCancel={
-                      handleRelease()
-                    }
+                    onTouchStart={handleTouchStart(item.id)}
+                    onTouchEnd={handleRelease(index)}
+                    onTouchCancel={handleRelease(index)}
+                    //@ts-ignore
+                    onMouseDown={handleTouchStart(item.id)}
+                    onMouseUp={handleRelease(index)}
+                    onClick={(e) => {
+                      //如果不阻止冒泡，那么View的长按会触发Tabs的点击事件
+                      e.stopPropagation()
+                    }}
                   >
                     {item.title}
                     {
@@ -177,7 +188,7 @@ const HistoryConversation = () => {
                   scrollWithAnimation
                   scrollTop={0}
                   style={{
-                    height: `${windowInfo.windowHeight - (env === 'WEB' ? 150 : 95)}px`,
+                    height: `${windowInfo.windowHeight - (env === 'WEB' ? 145 : 95)}px`,
                     backgroundColor: '#FFF3BC',
                     borderRadius: '10px',
                   }}
