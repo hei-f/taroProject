@@ -13,7 +13,7 @@ pnpm install
 ```bash
 cd chat-app
 pnpm dev:weapp
-//或者 编译为h5
+#或者 编译为h5
 pnpm dev:h5
 ```
 ### 3. 查看项目
