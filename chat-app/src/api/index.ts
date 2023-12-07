@@ -74,14 +74,14 @@ export class FetchStream {
       //注意这里then的回调是异步的
       async (readableStream) => {
 
-        // 1. 创建 reader 读取流队列
+        // 1. readableStream.getReader()创建 reader 读取流队列
         const reader = readableStream.getReader();
 
         // 2. 记录流队列中分块的索引
         let index: number = 0;
 
         while (true) {
-          // 3. reader.read()读取分块数据，会返回一个 Promise
+          // 3.await reader.read()读取分块数据，会返回一个 Promise
           // （如果分块可用，Promise 返回 { value: theChunk, done: false } 形式）
           // （如果流已关闭，Promise 返回 { value: undefined, done: true } 形式）
           const {value, done} = await reader.read();

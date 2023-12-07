@@ -38,8 +38,9 @@ const HistoryConversation = () => {
 
   const windowInfo = Taro.getWindowInfo()
 
+  //TODO:把新增按钮放在前面
   const onTabsClick = (item: number) => {
-    if (longPressFlag.current) {
+    if (longPressFlag.current) {//长按时不触发onClick
       longPressFlag.current = false
       return
     }
@@ -146,24 +147,8 @@ const HistoryConversation = () => {
                   <View
                     style={getStyle1(index)}
                     onLongPress={onLongPress(index)}
-                    // onTouchStart={handleTouchStart}
-                    // onTouchEnd={handleRelease(index)}
-                    // onTouchCancel={handleRelease(index)}
-                    // onTouchMove={() => {
-                    //   touchMoveFlag.current = false
-                    // }}
-
                   >
                     {item.title}
-                    {/*{*/}
-                    {/*  closeIconVisible[item.id] &&*/}
-                    {/*  <CircleClose*/}
-                    {/*    name='circle-close'*/}
-                    {/*    color={index === activeTab ? '#89E5D2' : '#282C34'}*/}
-                    {/*    size='12px'*/}
-                    {/*    onClick={onTabClose(index)}*/}
-                    {/*  />*/}
-                    {/*}*/}
                   </View>
                 }
               >

@@ -18,6 +18,9 @@ const GptContent = (props: {
     const parts: React.JSX.Element[] = [];
 
     const codeRegex = /```([a-zA-Z]+)\r?\n([\s\S]*?)```/g;
+    //```([a-zA-Z]+)  对应了```javascript
+    //\r?\n  对应了换行符
+    //([\s\S]*?) 对应了代码块内容
 
     let match: RegExpExecArray | null;
     let lastIndex = 0;
