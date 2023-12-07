@@ -1,7 +1,7 @@
-import {CSSProperties, useRef, useState} from "react";
+import {CSSProperties, useMemo, useRef} from "react";
 import {observer} from "mobx-react";
-import {Tabs, TabPane, Dialog} from '@nutui/nutui-react-taro';
-import {Plus} from '@nutui/icons-react-taro'
+import {Tabs, TabPane} from '@nutui/nutui-react-taro';
+import {CircleClose, Plus} from '@nutui/icons-react-taro'
 import {ScrollView, View} from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import {store} from "src/store";
@@ -17,34 +17,48 @@ const HistoryConversation = () => {
     activeTab,
     setActiveTab,
     deleteConversation,
+    closeIconVisible,
+    setCloseIconVisible,
+    clearCloseIconVisible,
     conversationMap,
     env
   } = store
 
   const longPressFlag = useRef<boolean>(false)
-  const [deleteDialogVisible, setDeleteDialogVisible] = useState<boolean>(false)
-  const [deleteIndex, setDeleteIndex] = useState<number>(0)
 
-  const onLongPress = (index: number) => {
+  const windowInfo = Taro.getWindowInfo()
+
+  //缓存最大tab数量
+  const maxTabNum = useMemo(() => {
+    return (Math.floor(windowInfo.windowWidth / 88))
+  }, [windowInfo.windowWidth])
+  //缓存是否显示新增tab
+  const showAddTab = useMemo(() => {
+    return (conversationTabs.length < maxTabNum)
+  }, [conversationTabs.length, maxTabNum])
+
+  //缓存scrollView高度
+  const scrollViewHeight = useMemo(() => {
+    return (`${windowInfo.windowHeight - (env === 'WEB' ? 145 : 95)}px`)
+  }, [env, windowInfo.windowHeight])
+
+  const onLongPress = (id: string) => {
     return (
       () => {
-        setDeleteIndex(index)
         longPressFlag.current = true
-        setDeleteDialogVisible(true)
+        setCloseIconVisible(id)
       }
     )
   }
 
-
-  const windowInfo = Taro.getWindowInfo()
-
-  //TODO:把新增按钮放在前面
+  //TODO: 使用uuid代替数字id
   const onTabsClick = (item: number) => {
     if (longPressFlag.current) {//长按时不触发onClick
       longPressFlag.current = false
       return
     }
     if (item === conversationTabs.length) {
+      // console.log('conversationTabs=', conversationTabs)
       const id = Number(conversationTabs[conversationTabs.length - 1].id) + 1
       setConversationTabs(
         [...conversationTabs,
@@ -59,40 +73,46 @@ const HistoryConversation = () => {
   }
 
   const onTabClose = (index: number) => {
+    return (
+      (event: MouseEvent) => {
+        event.stopPropagation() //阻止冒泡，不然会切换activeTab
 
-    if (conversationTabs.length === 1) {
-      setConversationTabs([
-        {
-          title: '对话1',
-          id: '1',
-        },
-      ])
-      setActiveTab(0)
-      deleteConversation()
-    } else {
+        if (conversationTabs.length === 1) {
+          setConversationTabs([
+            {
+              title: '对话1',
+              id: '1',
+            },
+          ])
+          setActiveTab(0)
+          deleteConversation()
+          clearCloseIconVisible()
+        } else {
 
-      deleteConversation(conversationTabs[index].id)
+          deleteConversation(conversationTabs[index].id)
+          clearCloseIconVisible()
 
-      setConversationTabs(
-        conversationTabs.filter((_, i) => i !== index)
-      )
+          setConversationTabs(
+            conversationTabs.filter((_, i) => i !== index)
+          )
 
-      if (index === activeTab && index !== 0) {
-        console.log('index=', index)
-        setActiveTab(index - 1)
+          if (index === activeTab && index !== 0) {
+            setActiveTab(index - 1)
+          }
+        }
+
+        const conversationInfo = JSON.stringify({
+          conversationMap: conversationMap,
+          conversationTabs: conversationTabs
+        })
+
+        Taro.setStorage({
+          key: 'conversationInfo',
+          data: conversationInfo
+        })
+
       }
-    }
-
-    const conversationInfo = JSON.stringify({
-      conversationMap: conversationMap,
-      conversationTabs: conversationTabs
-    })
-
-    Taro.setStorage({
-      key: 'conversationInfo',
-      data: conversationInfo
-    })
-
+    )
   }
 
   const getStyle1 = (index: number): CSSProperties => {
@@ -107,7 +127,7 @@ const HistoryConversation = () => {
       backgroundColor: index === activeTab ? '#282C34' : '#89E5D2',
       fontWeight: "550",
       color: index === activeTab ? '#89E5D2' : '#282C34',
-      width: '70px',
+      width: '67px',
     })
   }
 
@@ -115,20 +135,6 @@ const HistoryConversation = () => {
     <View
       className='historyConversation'
     >
-      <Dialog
-        title='提示'
-        content='确定要删除该对话吗？'
-        visible={deleteDialogVisible}
-        onCancel={() => {
-          setDeleteDialogVisible(false)
-        }}
-        onConfirm={() => {
-          console.log('deleteIndex=', deleteIndex)
-          onTabClose(deleteIndex)
-          setDeleteDialogVisible(false)
-        }}
-        closeOnOverlayClick={false}
-      />
       <Tabs
         className='historyConversationTabs'
         value={activeTab}
@@ -146,9 +152,18 @@ const HistoryConversation = () => {
                 title={
                   <View
                     style={getStyle1(index)}
-                    onLongPress={onLongPress(index)}
+                    onLongPress={onLongPress(item.id)}
                   >
                     {item.title}
+                    <CircleClose
+                      name='circle-close'
+                      color={index === activeTab ? '#89E5D2' : '#282C34'}
+                      size='12px'
+                      onClick={onTabClose(index)}
+                      style={{
+                        display: closeIconVisible[item.id] ? 'block' : 'none',
+                      }}
+                    />
                   </View>
                 }
               >
@@ -157,7 +172,7 @@ const HistoryConversation = () => {
                   scrollWithAnimation
                   scrollTop={0}
                   style={{
-                    height: `${windowInfo.windowHeight - (env === 'WEB' ? 145 : 95)}px`,
+                    height: scrollViewHeight,
                     backgroundColor: '#FFF3BC',
                     borderRadius: '10px',
                   }}
@@ -177,8 +192,9 @@ const HistoryConversation = () => {
         }
 
         {
+          showAddTab &&
           <TabPane
-            key={`${conversationTabs.length}-新增}`}
+            key='新增'
             // @ts-ignore
             title={
               <View
