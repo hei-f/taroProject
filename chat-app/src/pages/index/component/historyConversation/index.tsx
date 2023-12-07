@@ -1,10 +1,11 @@
-import {CSSProperties, useMemo, useRef} from "react";
+import {CSSProperties, useMemo, useState} from "react";
 import {observer} from "mobx-react";
-import {Tabs, TabPane} from '@nutui/nutui-react-taro';
-import {CircleClose, Plus} from '@nutui/icons-react-taro'
-import {ScrollView, View} from "@tarojs/components";
+import {Tabs, TabPane, Dialog} from '@nutui/nutui-react-taro';
+import {Plus} from '@nutui/icons-react-taro'
+import {CommonEvent, ScrollView, View} from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import {store} from "src/store";
+import {getUUID} from "src/utils";
 import ChatRoom from "src/pages/index/component/chatRoom";
 import './index.scss'
 
@@ -17,14 +18,13 @@ const HistoryConversation = () => {
     activeTab,
     setActiveTab,
     deleteConversation,
-    closeIconVisible,
-    setCloseIconVisible,
-    clearCloseIconVisible,
     conversationMap,
     env
   } = store
 
-  const longPressFlag = useRef<boolean>(false)
+  const [deleteDialogVisible, setDeleteDialogVisible] = useState<boolean>(false)
+  const [deleteIndex, setDeleteIndex] = useState<number>(0)
+
 
   const windowInfo = Taro.getWindowInfo()
 
@@ -42,78 +42,74 @@ const HistoryConversation = () => {
     return (`${windowInfo.windowHeight - (env === 'WEB' ? 145 : 95)}px`)
   }, [env, windowInfo.windowHeight])
 
-  const onLongPress = (id: string) => {
+  const onLongPress = (index: number) => {
     return (
-      () => {
-        longPressFlag.current = true
-        setCloseIconVisible(id)
+      (event: CommonEvent) => {
+        event.stopPropagation()
+        setDeleteIndex(index)
+        setDeleteDialogVisible(true)
       }
     )
   }
 
-  //TODO: 使用uuid代替数字id
   const onTabsClick = (item: number) => {
-    if (longPressFlag.current) {//长按时不触发onClick
-      longPressFlag.current = false
-      return
-    }
+
     if (item === conversationTabs.length) {
       // console.log('conversationTabs=', conversationTabs)
-      const id = Number(conversationTabs[conversationTabs.length - 1].id) + 1
+      const id = getUUID()
+      const idx = conversationTabs[conversationTabs.length - 1].index + 1
+
       setConversationTabs(
         [...conversationTabs,
           {
-            title: `对话${id}`,
+            title: `对话${idx}`,
             id: `${id}`,
+            index: idx
           }
         ]
       )
+    } else {
+      setActiveTab(item)
     }
-    setActiveTab(item)
+
   }
 
   const onTabClose = (index: number) => {
-    return (
-      (event: MouseEvent) => {
-        event.stopPropagation() //阻止冒泡，不然会切换activeTab
 
-        if (conversationTabs.length === 1) {
-          setConversationTabs([
-            {
-              title: '对话1',
-              id: '1',
-            },
-          ])
-          setActiveTab(0)
-          deleteConversation()
-          clearCloseIconVisible()
-        } else {
+    if (conversationTabs.length === 1) {
+      const id = getUUID()
+      setConversationTabs([
+        {
+          title: '对话1',
+          id: id,
+          index: 1
+        },
+      ])
+      setActiveTab(0)
+      deleteConversation(undefined, id)
+    } else {
+      deleteConversation(conversationTabs[index].id)
+      setConversationTabs(
+        conversationTabs.filter((_, i) => i !== index)
+      )
 
-          deleteConversation(conversationTabs[index].id)
-          clearCloseIconVisible()
-
-          setConversationTabs(
-            conversationTabs.filter((_, i) => i !== index)
-          )
-
-          if (index === activeTab && index !== 0) {
-            setActiveTab(index - 1)
-          }
-        }
-
-        const conversationInfo = JSON.stringify({
-          conversationMap: conversationMap,
-          conversationTabs: conversationTabs
-        })
-
-        Taro.setStorage({
-          key: 'conversationInfo',
-          data: conversationInfo
-        })
-
+      if (index === activeTab && index !== 0) {
+        setActiveTab(index - 1)
       }
-    )
+    }
+
+    const conversationInfo = JSON.stringify({
+      conversationMap: conversationMap,
+      conversationTabs: conversationTabs
+    })
+
+    Taro.setStorage({
+      key: 'conversationInfo',
+      data: conversationInfo
+    })
+
   }
+
 
   const getStyle1 = (index: number): CSSProperties => {
     return ({
@@ -135,6 +131,20 @@ const HistoryConversation = () => {
     <View
       className='historyConversation'
     >
+      <Dialog
+        title='提示'
+        content='确定要删除该对话吗？'
+        visible={deleteDialogVisible}
+        onCancel={() => {
+          setDeleteDialogVisible(false)
+        }}
+        onConfirm={() => {
+          console.log('deleteIndex=', deleteIndex)
+          onTabClose(deleteIndex)
+          setDeleteDialogVisible(false)
+        }}
+        closeOnOverlayClick={false}
+      />
       <Tabs
         className='historyConversationTabs'
         value={activeTab}
@@ -145,25 +155,16 @@ const HistoryConversation = () => {
         {
           conversationTabs.map((item, index) => (
               <TabPane
-                key={`${item.title}`}
+                key={`${item.id}`}
                 className='historyConversationTabPane'
                 value={index}
                 // @ts-ignore
                 title={
                   <View
                     style={getStyle1(index)}
-                    onLongPress={onLongPress(item.id)}
+                    onLongPress={onLongPress(index)}
                   >
                     {item.title}
-                    <CircleClose
-                      name='circle-close'
-                      color={index === activeTab ? '#89E5D2' : '#282C34'}
-                      size='12px'
-                      onClick={onTabClose(index)}
-                      style={{
-                        display: closeIconVisible[item.id] ? 'block' : 'none',
-                      }}
-                    />
                   </View>
                 }
               >
@@ -207,6 +208,14 @@ const HistoryConversation = () => {
               </View>
             }
           >
+            <View
+              style={{
+                height: scrollViewHeight,
+                backgroundColor: '#FFF3BC',
+                borderRadius: '10px',
+              }}
+            >
+            </View>
           </TabPane>
         }
       </Tabs>

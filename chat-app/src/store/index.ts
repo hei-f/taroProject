@@ -1,5 +1,8 @@
 import {makeAutoObservable} from "mobx";
 import {CloseIconVisible, Conversation, ConversationMap, ConversationTab, Params} from "src/types";
+import {getUUID} from "src/utils";
+
+const uuid = getUUID()
 
 class Store {
   constructor() {
@@ -33,10 +36,14 @@ class Store {
       this.conversationMap[id].push(content)
     }
   }
-  deleteConversation = (id?: string) => {
+  deleteConversation = (id?: string, newId?: string) => {
     if (!id) {
-      this.conversationMap = {
-        "1": []
+      if (!newId) {
+        this.conversationMap = {}
+      } else {
+        this.conversationMap = {
+          [newId]: []
+        }
       }
       return;
     }
@@ -65,7 +72,8 @@ class Store {
   conversationTabs: ConversationTab[] = [
     {
       title: '对话1',
-      id: '1',
+      id: uuid,
+      index: 1
     },
   ]
   setConversationTabs = (tabs: ConversationTab[]) => {
@@ -81,7 +89,7 @@ class Store {
     if (this.conversationTabs && this.conversationTabs[this.activeTab]) {
       return this.conversationTabs[this.activeTab].id;
     } else {
-      return '1'
+      return uuid;
     }
   }
 

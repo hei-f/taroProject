@@ -19,6 +19,7 @@ export type ConversationMap = {
 export type ConversationTab = {
   title: string,
   id: string,
+  index: number
 }
 
 //参数
