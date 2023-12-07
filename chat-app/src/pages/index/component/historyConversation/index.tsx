@@ -68,10 +68,8 @@ const HistoryConversation = () => {
           }
         ]
       )
-    } else {
-      setActiveTab(item)
     }
-
+    setActiveTab(item)
   }
 
   const onTabClose = (index: number) => {
