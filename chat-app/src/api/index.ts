@@ -55,7 +55,7 @@ export class FetchStream {
         ...this.requestInit   //body和headers在这里面
       }
     ).then((response) => {
-      console.log('fetch.response=', response)
+      // console.log('fetch.response=', response)
 
       clearTimeout(this.timer); // 拿到结果，清除 timeout 计时器
 
@@ -93,12 +93,12 @@ export class FetchStream {
             break;
 
           } else {
-            console.log('fetch.value=', value)
+            // console.log('fetch.value=', value)
 
             // 4. 将分块数据转换为 string 交给外部处理函数使用
             const dataText = new TextDecoder().decode(value);
 
-            console.log('fetch.dataText=', dataText)
+            // console.log('fetch.dataText=', dataText)
 
             const data = dataText.split('\n\n').filter(Boolean) as string[];
             // response 响应的消息可能存在多个，以 \n\n 分割

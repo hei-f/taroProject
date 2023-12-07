@@ -137,7 +137,7 @@ const HistoryConversation = () => {
           setDeleteDialogVisible(false)
         }}
         onConfirm={() => {
-          console.log('deleteIndex=', deleteIndex)
+          // console.log('deleteIndex=', deleteIndex)
           onTabClose(deleteIndex)
           setDeleteDialogVisible(false)
         }}

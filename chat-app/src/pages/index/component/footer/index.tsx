@@ -131,7 +131,7 @@ const Footer = () => {
             // }
 
             if (plusContent !== undefined) {
-              console.log('plusContent=', plusContent)
+              // console.log('plusContent=', plusContent)
               resContent += plusContent
             }
           }
@@ -166,7 +166,7 @@ const Footer = () => {
     } else {
       //小程序中用不了sse，只能用websocket，但openAi的api不支持websocket
       chatRequest(requestData, openApiKey).then((res: ChatResponse) => {
-        console.log('res=', res)
+        // console.log('res=', res)
         let response = res.data.choices[0].message.content
         showResponse(getId, response)
 
