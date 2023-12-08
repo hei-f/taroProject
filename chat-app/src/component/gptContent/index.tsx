@@ -2,7 +2,7 @@ import {Cell, Image} from "@nutui/nutui-react-taro";
 // @ts-ignore
 import gptIcon from "src/assets/images/gptIcon.png";
 import React from "react";
-import {View} from "@tarojs/components";
+import {View, Text} from "@tarojs/components";
 import './index.scss'
 
 
@@ -35,8 +35,9 @@ const GptContent = (props: {
 
       if (nonCodePart.length > 0) {
         parts.push(
-          <View
+          <Text
             key={parts.length}
+            selectable
             style={{
               whiteSpace: 'pre-wrap',
               //white-space属性来处理换行
@@ -59,21 +60,22 @@ const GptContent = (props: {
             }}
           >
             {nonCodePart}
-          </View>
+          </Text>
         );
       }
 
       parts.push(
-        <View
+        <Text
           key={parts.length}
           className='code'
           style={{
             whiteSpace: 'pre-wrap',
           }}
+          selectable
         >
           {`//${languageIdentifier} \n\n`}
           {codeBlock}
-        </View>
+        </Text>
       );
     }
 
@@ -81,16 +83,17 @@ const GptContent = (props: {
 
     if (remainingText.length > 0) {
       parts.push(
-        <View
+        <Text
           key={parts.length}
           style={{
             whiteSpace: 'pre-wrap',
           }}
+          selectable
         >
           {
             remainingText
           }
-        </View>
+        </Text>
       );
     }
 

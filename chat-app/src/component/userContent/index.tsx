@@ -24,7 +24,9 @@ const UserContent = (props: {
           color: '#E5C17C',
         }}
       >
-        <Text>
+        <Text
+          selectable
+        >
           {children}
         </Text>
       </View>

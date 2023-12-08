@@ -164,7 +164,7 @@ const Footer = () => {
 
 
     } else {
-      //小程序中用不了sse，只能用websocket，但openAi的api不支持websocket
+      //小程序中用不了sse以及fetch，只能用websocket，但openAi的api不支持websocket
       chatRequest(requestData, openApiKey).then((res: ChatResponse) => {
         // console.log('res=', res)
         let response = res.data.choices[0].message.content
