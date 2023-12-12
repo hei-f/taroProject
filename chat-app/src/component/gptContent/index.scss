@@ -1,3 +1,24 @@
+.gpt-content-cell {
+  background-color: #F2F6F7;
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.25);
+
+  .gpt-content-view {
+    display: flex;
+    align-Items: center;
+    justify-Content: flex-start;
+
+    .gpt-icon {
+      margin-Right: 20px;
+
+      .gpt-icon-image {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
+}
+
+
 .code {
   font-family: 'Courier New', monospace;
   background-color: #282C34;
@@ -5,3 +26,5 @@
   border-radius: 10px;
   color: #98C379;
 }
+
+

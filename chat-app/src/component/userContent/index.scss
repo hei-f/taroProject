@@ -1,0 +1,13 @@
+.user-content-cell {
+  background-Color: #282C34;
+  box-Shadow: 0 8px 8px rgba(0, 0, 0, 0.25);
+
+  .user-content-view {
+    display: flex;
+    align-Items: center;
+    justify-Content: start;
+    flex-Direction: row-reverse;
+    width: 100%;
+    color: #E5C17C;
+  }
+}

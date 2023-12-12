@@ -1,36 +1,29 @@
 import {View, Text} from "@tarojs/components";
 import {Cell} from "@nutui/nutui-react-taro";
+import {memo} from "react";
+import './index.scss'
 
 
-const UserContent = (props: {
+const UserContent = memo((props: {
   children?: any
 }) => {
   const {children} = props
 
   return (
     <Cell
-      style={{
-        backgroundColor: '#282C34',
-        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-      }}
+      className='user-content-cell'
     >
       <View
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'start',
-          flexDirection: 'row-reverse',
-          width: '100%',
-          color: '#E5C17C',
-        }}
+        className='user-content-view'
       >
         <Text
+          className='user-content'
           selectable
         >
           {children}
         </Text>
       </View>
     </Cell>)
-}
+})
 
 export default UserContent

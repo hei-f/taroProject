@@ -1,12 +1,14 @@
 import {Cell, Image} from "@nutui/nutui-react-taro";
 // @ts-ignore
 import gptIcon from "src/assets/images/gptIcon.png";
-import React from "react";
+import React, {memo} from "react";
 import {View, Text} from "@tarojs/components";
 import './index.scss'
 
+//TODO:优化内联样式，内联样式的px不会被taro转换，导致换成css时使用px作为单位数值要乘2
 
-const GptContent = (props: {
+//TODO:用富文本解析代码块
+const GptContent = memo((props: {
   children?: any,
   loading?: boolean,
 }) => {
@@ -104,29 +106,17 @@ const GptContent = (props: {
 
   return (
     <Cell
-      style={{
-        backgroundColor: '#F2F6F7',
-        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-      }}
+      className='gpt-content-cell'
     >
       <View
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-        }}
+        className='gpt-content-view'
       >
         <View
-          style={{
-            marginRight: '10px'
-          }}
+          className='gpt-icon'
         >
           <Image
+            className='gpt-icon-image'
             src={gptIcon}
-            style={{
-              width: '20px',
-              height: '20px',
-            }}
           />
         </View>
 
@@ -151,6 +141,6 @@ const GptContent = (props: {
       </View>
     </Cell>
   )
-}
+})
 
 export default GptContent

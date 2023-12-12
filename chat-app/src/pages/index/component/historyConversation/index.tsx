@@ -161,6 +161,7 @@ const HistoryConversation = () => {
                   <View
                     style={getStyle1(index)}
                     onLongPress={onLongPress(index)}
+                    hoverStopPropagation //指定是否阻止本节点的祖先节点出现点击态
                   >
                     {item.title}
                   </View>
